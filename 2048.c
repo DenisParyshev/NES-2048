@@ -34,6 +34,14 @@ void Load_Palette(void) {
 	All_On();
 }
 
+// звук
+void beep(unsigned char b, unsigned char t) {
+	*((unsigned char*)0x4015) = 0x0f;
+	*((unsigned char*)0x4000) = 0x0f;
+	*((unsigned char*)0x4001) = 0xab + b;
+	*((unsigned char*)0x4003) = 0x01 + t;
+}
+
 // завершаем игру и выводим GAME OVER!
 void GameOver(void) {
 	stopGame = 1;
@@ -48,6 +56,7 @@ void GameOver(void) {
 	n2[390] = 0x37;
 	n2[391] = 0x39;
 	n2[392] = 0x3f;
+	beep(3, 3);
 }
 
 // завершаем игру и выводим поздравление
@@ -62,6 +71,7 @@ void YouWin(void) {
 	n2[389] = 0x3d;
 	n2[390] = 0x3e;
 	n2[391] = 0x3f;
+	beep(0, 3);
 }
 
 // заполним следующую свободную клетку
@@ -148,10 +158,10 @@ void move_logic(void) {
 	// анализируем курсор только в режиме игры
 	if ((state == 1) && (stopGame == 0)) {
 		index = 0;
-		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0))	for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);	// нажали вправо
-		if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))		for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);	// нажали влево
-		if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))		for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);	// нажали вниз
-		if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))		for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);	// нажали вверх
+		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0))	for (index = 0; index < 4; ++index) { fillField(0, 1, 2, 3, index, index, index, index); beep(1, 0);}	// нажали вправо
+		if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))		for (index = 0; index < 4; ++index) { fillField(3, 2, 1, 0, index, index, index, index); beep(3, 0);}	// нажали влево
+		if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))		for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 0, 1, 2, 3); beep(2, 0);}	// нажали вниз
+		if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))		for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 3, 2, 1, 0); beep(4, 0);}	// нажали вверх
 		// если была нажата кнопка, разместим следующее число
 		if (index > 0) putRandom();
 	}
@@ -162,6 +172,7 @@ void move_logic(void) {
 			state = 1;
 			needRedraw = 1;
 			stopGame = 0;
+			beep(0, 3);
 		}
 }
 

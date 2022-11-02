@@ -42,6 +42,7 @@
 	.export		_n1
 	.export		_n2
 	.export		_Screens
+	.export		_beep
 	.export		_GameOver
 	.export		_YouWin
 	.export		_putRandom
@@ -1250,7 +1251,7 @@ L0003:	jmp     _All_On
 ;
 	sta     _index
 ;
-; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index); // нажали вправо
+; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) for (index = 0; index < 4; ++index) { fillField(0, 1, 2, 3, index, index, index, index); beep(1, 0);} // нажали вправо
 ;
 	lda     _joypad1
 	and     #$01
@@ -1286,10 +1287,14 @@ L003D:	lda     _index
 	sta     (sp),y
 	lda     _index
 	jsr     _fillField
+	lda     #$01
+	jsr     pusha
+	lda     #$00
+	jsr     _beep
 	inc     _index
 	jmp     L003D
 ;
-; if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))  for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index); // нажали влево
+; if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))  for (index = 0; index < 4; ++index) { fillField(3, 2, 1, 0, index, index, index, index); beep(3, 0);} // нажали влево
 ;
 L003E:	lda     _joypad1
 	and     #$02
@@ -1325,10 +1330,14 @@ L0042:	lda     _index
 	sta     (sp),y
 	lda     _index
 	jsr     _fillField
+	lda     #$03
+	jsr     pusha
+	lda     #$00
+	jsr     _beep
 	inc     _index
 	jmp     L0042
 ;
-; if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))  for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3); // нажали вниз
+; if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))  for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 0, 1, 2, 3); beep(2, 0);} // нажали вниз
 ;
 L0043:	lda     _joypad1
 	and     #$04
@@ -1364,10 +1373,14 @@ L0047:	lda     _index
 	sta     (sp),y
 	lda     #$03
 	jsr     _fillField
+	lda     #$02
+	jsr     pusha
+	lda     #$00
+	jsr     _beep
 	inc     _index
 	jmp     L0047
 ;
-; if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))  for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0); // нажали вверх
+; if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))  for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 3, 2, 1, 0); beep(4, 0);} // нажали вверх
 ;
 L0048:	lda     _joypad1
 	and     #$08
@@ -1403,6 +1416,10 @@ L004C:	lda     _index
 	sta     (sp),y
 	tya
 	jsr     _fillField
+	lda     #$04
+	jsr     pusha
+	lda     #$00
+	jsr     _beep
 	inc     _index
 	jmp     L004C
 ;
@@ -1450,9 +1467,11 @@ L0053:	jsr     _initGame
 	lda     #$00
 	sta     _stopGame
 ;
-; }
+; beep(0, 3);
 ;
-	rts
+	jsr     pusha
+	lda     #$03
+	jmp     _beep
 
 .endproc
 
@@ -1589,6 +1608,52 @@ L000E:	adc     #<(_Screens)
 .endproc
 
 ; ---------------------------------------------------------------
+; void __near__ beep (unsigned char b, unsigned char t)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_beep: near
+
+.segment	"CODE"
+
+;
+; void beep(unsigned char b, unsigned char t) {
+;
+	jsr     pusha
+;
+; *((unsigned char*)0x4015) = 0x0f;
+;
+	lda     #$0F
+	sta     $4015
+;
+; *((unsigned char*)0x4000) = 0x0f;
+;
+	sta     $4000
+;
+; *((unsigned char*)0x4001) = 0xab + b;
+;
+	ldy     #$01
+	lda     (sp),y
+	clc
+	adc     #$AB
+	sta     $4001
+;
+; *((unsigned char*)0x4003) = 0x01 + t;
+;
+	dey
+	lda     (sp),y
+	clc
+	adc     #$01
+	sta     $4003
+;
+; }
+;
+	jmp     incsp2
+
+.endproc
+
+; ---------------------------------------------------------------
 ; void __near__ GameOver (void)
 ; ---------------------------------------------------------------
 
@@ -1658,9 +1723,11 @@ L000E:	adc     #<(_Screens)
 	lda     #$3F
 	sta     _n2+392
 ;
-; }
+; beep(3, 3);
 ;
-	rts
+	lda     #$03
+	jsr     pusha
+	jmp     _beep
 
 .endproc
 
@@ -1724,9 +1791,12 @@ L000E:	adc     #<(_Screens)
 	lda     #$3F
 	sta     _n2+391
 ;
-; }
+; beep(0, 3);
 ;
-	rts
+	lda     #$00
+	jsr     pusha
+	lda     #$03
+	jmp     _beep
 
 .endproc
 
