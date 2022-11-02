@@ -30,20 +30,17 @@ unsigned char joypad2;
 unsigned char joypad2old;
 unsigned char joypad2test;
 unsigned char needRedraw;
-unsigned char state; // режим игры: 0-начальный экран, 1-игра, 2-игра окончена, 3-игрок выиграл
+unsigned char state;
 unsigned char fld[4];
 unsigned char x;
 unsigned char y;
-unsigned char z;
+unsigned char stopGame = 0;
 
 // массив игровой области
 unsigned char field[4][4];
-// мапер между массивом игровой области и координатами экрана в PPU
-int map[16] = { 53,59,65,71,141,147,153,159,229,235,241,247,317,323,329,335 };
 
-// выделим 256 байт для ОАМ области
-#pragma bss-name(push, "OAM")
-unsigned char SPRITES[256];
+// мапер между массивом игровой области и координатами экрана в PPU
+int map[16] = { 53, 59, 65, 71, 141, 147, 153, 159, 229, 235, 241, 247, 317, 323, 329, 335 };
 
 // основная палитра
 const unsigned char PALETTE[] = { 

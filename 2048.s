@@ -25,10 +25,9 @@
 	.export		_fld
 	.export		_x
 	.export		_y
-	.export		_z
+	.export		_stopGame
 	.export		_field
 	.export		_map
-	.export		_SPRITES
 	.export		_PALETTE
 	.export		_All_Off
 	.export		_All_On
@@ -42,20 +41,21 @@
 	.import		_srand
 	.export		_n1
 	.export		_n2
-	.export		_n3
-	.export		_n4
-	.export		_All_Backgrounds
+	.export		_Screens
+	.export		_GameOver
+	.export		_YouWin
 	.export		_putRandom
 	.export		_initGame
 	.export		_main
 	.export		_shiftOne
-	.export		_shiftLine
-	.export		_fillFldX
-	.export		_fillFldY
+	.export		_fillField
+	.export		_fillChar
 	.export		_mapField
 
 .segment	"DATA"
 
+_stopGame:
+	.byte	$00
 _map:
 	.word	$0035
 	.word	$003B
@@ -456,10 +456,20 @@ _n2:
 	.byte	$2F
 	.byte	$00
 	.byte	$0B
-	.byte	$FE
+	.byte	$4E
+	.byte	$35
+	.byte	$33
+	.byte	$36
+	.byte	$37
+	.byte	$00
+	.byte	$32
+	.byte	$38
+	.byte	$37
+	.byte	$39
+	.byte	$3F
 	.byte	$00
 	.byte	$0B
-	.byte	$2C
+	.byte	$D2
 	.byte	$6A
 	.byte	$9A
 	.byte	$5A
@@ -1073,1104 +1083,9 @@ _n1:
 	.byte	$00
 	.byte	$01
 	.byte	$00
-_n3:
-	.byte	$01
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$15
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$01
-	.byte	$02
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$01
-	.byte	$03
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$13
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$6A
-	.byte	$35
-	.byte	$33
-	.byte	$36
-	.byte	$37
-	.byte	$00
-	.byte	$32
-	.byte	$38
-	.byte	$37
-	.byte	$39
-	.byte	$3F
-	.byte	$01
-	.byte	$02
-	.byte	$00
-	.byte	$01
-	.byte	$AF
-	.byte	$13
-	.byte	$14
-	.byte	$01
-	.byte	$11
-	.byte	$15
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$19
-	.byte	$00
-	.byte	$1B
-	.byte	$00
-	.byte	$1C
-	.byte	$1D
-	.byte	$1E
-	.byte	$1F
-	.byte	$20
-	.byte	$00
-	.byte	$21
-	.byte	$22
-	.byte	$23
-	.byte	$24
-	.byte	$20
-	.byte	$25
-	.byte	$1D
-	.byte	$26
-	.byte	$00
-	.byte	$1A
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$19
-	.byte	$00
-	.byte	$01
-	.byte	$06
-	.byte	$27
-	.byte	$28
-	.byte	$27
-	.byte	$27
-	.byte	$00
-	.byte	$01
-	.byte	$06
-	.byte	$1A
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$16
-	.byte	$17
-	.byte	$01
-	.byte	$11
-	.byte	$18
-	.byte	$00
-	.byte	$01
-	.byte	$44
-	.byte	$AA
-	.byte	$01
-	.byte	$08
-	.byte	$26
-	.byte	$55
-	.byte	$01
-	.byte	$03
-	.byte	$99
-	.byte	$AA
-	.byte	$AA
-	.byte	$A6
-	.byte	$A5
-	.byte	$A5
-	.byte	$A4
-	.byte	$A5
-	.byte	$A9
-	.byte	$AA
-	.byte	$01
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$C0
-	.byte	$F0
-	.byte	$01
-	.byte	$02
-	.byte	$02
-	.byte	$00
-	.byte	$01
-	.byte	$17
-	.byte	$00
-	.byte	$01
-	.byte	$00
-_n4:
-	.byte	$01
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$15
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$01
-	.byte	$02
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$12
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$00
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$01
-	.byte	$03
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$03
-	.byte	$12
-	.byte	$00
-	.byte	$00
-	.byte	$12
-	.byte	$12
-	.byte	$00
-	.byte	$01
-	.byte	$02
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$13
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$10
-	.byte	$11
-	.byte	$00
-	.byte	$01
-	.byte	$6B
-	.byte	$3A
-	.byte	$32
-	.byte	$3B
-	.byte	$00
-	.byte	$3C
-	.byte	$3D
-	.byte	$3E
-	.byte	$3F
-	.byte	$01
-	.byte	$02
-	.byte	$00
-	.byte	$01
-	.byte	$B0
-	.byte	$13
-	.byte	$14
-	.byte	$01
-	.byte	$11
-	.byte	$15
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$19
-	.byte	$00
-	.byte	$1B
-	.byte	$00
-	.byte	$1C
-	.byte	$1D
-	.byte	$1E
-	.byte	$1F
-	.byte	$20
-	.byte	$00
-	.byte	$21
-	.byte	$22
-	.byte	$23
-	.byte	$24
-	.byte	$20
-	.byte	$25
-	.byte	$1D
-	.byte	$26
-	.byte	$00
-	.byte	$1A
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$19
-	.byte	$00
-	.byte	$01
-	.byte	$06
-	.byte	$27
-	.byte	$28
-	.byte	$27
-	.byte	$27
-	.byte	$00
-	.byte	$01
-	.byte	$06
-	.byte	$1A
-	.byte	$00
-	.byte	$01
-	.byte	$0B
-	.byte	$16
-	.byte	$17
-	.byte	$01
-	.byte	$11
-	.byte	$18
-	.byte	$00
-	.byte	$01
-	.byte	$44
-	.byte	$AA
-	.byte	$01
-	.byte	$08
-	.byte	$26
-	.byte	$55
-	.byte	$01
-	.byte	$03
-	.byte	$99
-	.byte	$AA
-	.byte	$AA
-	.byte	$A6
-	.byte	$A5
-	.byte	$A5
-	.byte	$A4
-	.byte	$A5
-	.byte	$A9
-	.byte	$AA
-	.byte	$01
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$C0
-	.byte	$F0
-	.byte	$01
-	.byte	$02
-	.byte	$02
-	.byte	$00
-	.byte	$00
-	.byte	$03
-	.byte	$00
-	.byte	$01
-	.byte	$14
-	.byte	$00
-	.byte	$01
-	.byte	$00
-_All_Backgrounds:
+_Screens:
 	.addr	_n1
 	.addr	_n2
-	.addr	_n3
-	.addr	_n4
 
 .segment	"BSS"
 
@@ -2203,13 +1118,8 @@ _x:
 	.res	1,$00
 _y:
 	.res	1,$00
-_z:
-	.res	1,$00
 _field:
 	.res	16,$00
-.segment	"OAM"
-_SPRITES:
-	.res	256,$00
 
 ; ---------------------------------------------------------------
 ; void __near__ All_Off (void)
@@ -2289,21 +1199,15 @@ _SPRITES:
 	lda     #$00
 	sta     $2006
 ;
-; for( index = 0; index < sizeof(PALETTE); ++index ){
+; for (index = 0; index < sizeof(PALETTE); ++index) PPU_DATA = PALETTE[index];
 ;
 	sta     _index
 L0007:	lda     _index
 	cmp     #$10
 	bcs     L0003
-;
-; PPU_DATA = PALETTE[index];
-;
 	ldy     _index
 	lda     _PALETTE,y
 	sta     $2007
-;
-; for( index = 0; index < sizeof(PALETTE); ++index ){
-;
 	inc     _index
 	jmp     L0007
 ;
@@ -2328,67 +1232,78 @@ L0003:	jmp     _All_On
 ;
 	jsr     _Get_Input
 ;
-; if (state == 1) {
+; if ((state == 1) && (stopGame == 0)) {
 ;
 	lda     _state
 	cmp     #$01
-	jne     L0045
+	jne     L004C
+	lda     _stopGame
+	jne     L004C
 ;
-; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { // нажали вправо
+; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { 
 ;
 	lda     _joypad1
 	and     #$01
-	beq     L0036
+	beq     L003D
 	lda     _joypad1old
 	and     #$01
-	bne     L0036
+	bne     L003D
 ;
-; for (index = 0; index < 4; ++index) fillFldY(0, 1, 2, 3, index);
+; for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);
 ;
 	sta     _index
-L0035:	lda     _index
+L003C:	lda     _index
 	cmp     #$04
-	bcs     L000A
-	jsr     decsp4
+	bcs     L000D
+	jsr     decsp7
 	lda     #$00
-	ldy     #$03
+	ldy     #$06
 	sta     (sp),y
 	lda     #$01
 	dey
 	sta     (sp),y
-	tya
+	lda     #$02
 	dey
 	sta     (sp),y
 	lda     #$03
 	dey
 	sta     (sp),y
 	lda     _index
-	jsr     _fillFldY
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	jsr     _fillField
 	inc     _index
-	jmp     L0035
+	jmp     L003C
 ;
 ; putRandom();
 ;
-L000A:	jsr     _putRandom
+L000D:	jsr     _putRandom
 ;
-; if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { // нажали влево
+; if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { 
 ;
-L0036:	lda     _joypad1
+L003D:	lda     _joypad1
 	and     #$02
-	beq     L003B
+	beq     L0042
 	lda     _joypad1old
 	and     #$02
-	bne     L003B
+	bne     L0042
 ;
-; for (index = 0; index < 4; ++index) fillFldY(3, 2, 1, 0, index);
+; for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);
 ;
 	sta     _index
-L003A:	lda     _index
+L0041:	lda     _index
 	cmp     #$04
-	bcs     L0014
-	jsr     decsp4
+	bcs     L0017
+	jsr     decsp7
 	lda     #$03
-	tay
+	ldy     #$06
 	sta     (sp),y
 	lda     #$02
 	dey
@@ -2400,107 +1315,138 @@ L003A:	lda     _index
 	dey
 	sta     (sp),y
 	lda     _index
-	jsr     _fillFldY
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	jsr     _fillField
 	inc     _index
-	jmp     L003A
+	jmp     L0041
 ;
 ; putRandom();
 ;
-L0014:	jsr     _putRandom
+L0017:	jsr     _putRandom
 ;
-; if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { // нажали вниз
+; if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { 
 ;
-L003B:	lda     _joypad1
+L0042:	lda     _joypad1
 	and     #$04
-	beq     L0040
+	beq     L0047
 	lda     _joypad1old
 	and     #$04
-	bne     L0040
+	bne     L0047
 ;
-; for (index = 0; index < 4; ++index) fillFldX(0, 1, 2, 3, index);
+; for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);
 ;
 	sta     _index
-L003F:	lda     _index
+L0046:	lda     _index
 	cmp     #$04
-	bcs     L001E
-	jsr     decsp4
+	bcs     L0021
+	jsr     decsp7
+	lda     _index
+	ldy     #$06
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
 	lda     #$00
-	ldy     #$03
+	dey
 	sta     (sp),y
 	lda     #$01
+	dey
+	sta     (sp),y
+	lda     #$02
+	dey
+	sta     (sp),y
+	lda     #$03
+	jsr     _fillField
+	inc     _index
+	jmp     L0046
+;
+; putRandom();
+;
+L0021:	jsr     _putRandom
+;
+; if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { 
+;
+L0047:	lda     _joypad1
+	and     #$08
+	beq     L004C
+	lda     _joypad1old
+	and     #$08
+	bne     L004C
+;
+; for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);
+;
+	sta     _index
+L004B:	lda     _index
+	cmp     #$04
+	bcs     L002B
+	jsr     decsp7
+	lda     _index
+	ldy     #$06
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
+	dey
+	sta     (sp),y
+	lda     _index
 	dey
 	sta     (sp),y
 	tya
 	dey
 	sta     (sp),y
-	lda     #$03
+	tya
 	dey
 	sta     (sp),y
-	lda     _index
-	jsr     _fillFldX
+	tya
+	dey
+	sta     (sp),y
+	tya
+	jsr     _fillField
 	inc     _index
-	jmp     L003F
+	jmp     L004B
 ;
 ; putRandom();
 ;
-L001E:	jsr     _putRandom
-;
-; if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { // нажали вверх
-;
-L0040:	lda     _joypad1
-	and     #$08
-	beq     L0045
-	lda     _joypad1old
-	and     #$08
-	bne     L0045
-;
-; for (index = 0; index < 4; ++index) fillFldX(3, 2, 1, 0, index);
-;
-	sta     _index
-L0044:	lda     _index
-	cmp     #$04
-	bcs     L0028
-	jsr     decsp4
-	lda     #$03
-	tay
-	sta     (sp),y
-	lda     #$02
-	dey
-	sta     (sp),y
-	lda     #$01
-	dey
-	sta     (sp),y
-	lda     #$00
-	dey
-	sta     (sp),y
-	lda     _index
-	jsr     _fillFldX
-	inc     _index
-	jmp     L0044
-;
-; putRandom();
-;
-L0028:	jsr     _putRandom
+L002B:	jsr     _putRandom
 ;
 ; if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
 ;
-L0045:	lda     _joypad1
+L004C:	lda     _joypad1
 	and     #$10
-	beq     L0047
+	beq     L004E
 	lda     _joypad1old
 	and     #$10
-	beq     L0048
-L0047:	rts
+	beq     L004F
+L004E:	rts
 ;
-; if (state != 1) {
+; if ((state != 1) || (stopGame == 1)) {
 ;
-L0048:	lda     _state
+L004F:	lda     _state
 	cmp     #$01
-	beq     L0031
+	bne     L0051
+	lda     _stopGame
+	cmp     #$01
+	beq     L0051
+	rts
 ;
 ; initGame();
 ;
-	jsr     _initGame
+L0051:	jsr     _initGame
 ;
 ; state = 1;
 ;
@@ -2511,9 +1457,14 @@ L0048:	lda     _state
 ;
 	sta     _needRedraw
 ;
+; stopGame = 0;
+;
+	lda     #$00
+	sta     _stopGame
+;
 ; }
 ;
-L0031:	rts
+	rts
 
 .endproc
 
@@ -2549,10 +1500,10 @@ L0031:	rts
 	cmp     #$01
 	bne     L0013
 ;
-; z = 0;
+; index = 0;
 ;
 	txa
-	sta     _z
+	sta     _index
 ;
 ; for (y = 0; y <= 3; y++) {
 ;
@@ -2570,7 +1521,7 @@ L0011:	lda     _x
 	cmp     #$04
 	bcs     L0012
 ;
-; mapField(field[x][y], map[z]);
+; mapField(field[x][y], map[index]);
 ;
 	jsr     aslax2
 	clc
@@ -2583,7 +1534,7 @@ L0011:	lda     _x
 	lda     (ptr1),y
 	jsr     pusha
 	ldx     #$00
-	lda     _z
+	lda     _index
 	asl     a
 	bcc     L000E
 	inx
@@ -2600,9 +1551,9 @@ L000E:	adc     #<(_map)
 	lda     (ptr1),y
 	jsr     _mapField
 ;
-; z++;
+; index++;
 ;
-	inc     _z
+	inc     _index
 ;
 ; for (x = 0; x <= 3; x++) {
 ;
@@ -2615,17 +1566,17 @@ L000E:	adc     #<(_map)
 L0012:	inc     _y
 	jmp     L0010
 ;
-; UnRLE(All_Backgrounds[state]);
+; UnRLE(Screens[state]);
 ;
 L0013:	lda     _state
 	asl     a
 	bcc     L000F
 	ldx     #$01
 	clc
-L000F:	adc     #<(_All_Backgrounds)
+L000F:	adc     #<(_Screens)
 	sta     ptr1
 	txa
-	adc     #>(_All_Backgrounds)
+	adc     #>(_Screens)
 	sta     ptr1+1
 	ldy     #$01
 	lda     (ptr1),y
@@ -2634,7 +1585,7 @@ L000F:	adc     #<(_All_Backgrounds)
 	lda     (ptr1),y
 	jsr     _UnRLE
 ;
-; Wait_Vblank();  // не включаем экран при обратном ходе луча
+; Wait_Vblank();  
 ;
 	jsr     _Wait_Vblank
 ;
@@ -2654,6 +1605,148 @@ L000F:	adc     #<(_All_Backgrounds)
 .endproc
 
 ; ---------------------------------------------------------------
+; void __near__ GameOver (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_GameOver: near
+
+.segment	"CODE"
+
+;
+; stopGame = 1;
+;
+	lda     #$01
+	sta     _stopGame
+;
+; needRedraw = 1;
+;
+	sta     _needRedraw
+;
+; n2[383] = 0x35;
+;
+	lda     #$35
+	sta     _n2+383
+;
+; n2[384] = 0x33;
+;
+	lda     #$33
+	sta     _n2+384
+;
+; n2[385] = 0x36;
+;
+	lda     #$36
+	sta     _n2+385
+;
+; n2[386] = 0x37;
+;
+	lda     #$37
+	sta     _n2+386
+;
+; n2[387] = 0x00;
+;
+	lda     #$00
+	sta     _n2+387
+;
+; n2[388] = 0x32;
+;
+	lda     #$32
+	sta     _n2+388
+;
+; n2[389] = 0x38;
+;
+	lda     #$38
+	sta     _n2+389
+;
+; n2[390] = 0x37;
+;
+	lda     #$37
+	sta     _n2+390
+;
+; n2[391] = 0x39;
+;
+	lda     #$39
+	sta     _n2+391
+;
+; n2[392] = 0x3f;
+;
+	lda     #$3F
+	sta     _n2+392
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ YouWin (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_YouWin: near
+
+.segment	"CODE"
+
+;
+; stopGame = 1;
+;
+	lda     #$01
+	sta     _stopGame
+;
+; needRedraw = 1;
+;
+	sta     _needRedraw
+;
+; n2[384] = 0x3a;
+;
+	lda     #$3A
+	sta     _n2+384
+;
+; n2[385] = 0x32;
+;
+	lda     #$32
+	sta     _n2+385
+;
+; n2[386] = 0x3b;
+;
+	lda     #$3B
+	sta     _n2+386
+;
+; n2[387] = 0x00;
+;
+	lda     #$00
+	sta     _n2+387
+;
+; n2[388] = 0x3c;
+;
+	lda     #$3C
+	sta     _n2+388
+;
+; n2[389] = 0x3d;
+;
+	lda     #$3D
+	sta     _n2+389
+;
+; n2[390] = 0x3e;
+;
+	lda     #$3E
+	sta     _n2+390
+;
+; n2[391] = 0x3f;
+;
+	lda     #$3F
+	sta     _n2+391
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
 ; void __near__ putRandom (void)
 ; ---------------------------------------------------------------
 
@@ -2664,71 +1757,30 @@ L000F:	adc     #<(_All_Backgrounds)
 .segment	"CODE"
 
 ;
-; x = rand() % 4;
+; index = 0;
 ;
-	jsr     _rand
-	jsr     pushax
-	ldx     #$00
-	lda     #$04
-	jsr     tosmoda0
-	sta     _x
+	lda     #$00
+	sta     _index
 ;
-; y = rand() % 4;
+; for (y = 0; y <= 3; y++) {
 ;
-	jsr     _rand
-	jsr     pushax
-	ldx     #$00
-	lda     #$04
-	jsr     tosmoda0
 	sta     _y
+L001A:	lda     _y
+	cmp     #$04
+	bcs     L001E
 ;
-; z = 1;
+; for (x = 0; x <= 3; x++) {
 ;
-	ldx     #$00
-	lda     #$01
-	sta     _z
-;
-; while ((field[x][y] > 0) && (state == 1)) {
-;
-	jmp     L0012
-;
-; x = rand() % 4;
-;
-L0002:	jsr     _rand
-	jsr     pushax
-	ldx     #$00
-	lda     #$04
-	jsr     tosmoda0
+	lda     #$00
 	sta     _x
+L001B:	lda     _x
+	cmp     #$04
+	bcs     L001D
 ;
-; y = rand() % 4;
-;
-	jsr     _rand
-	jsr     pushax
-	ldx     #$00
-	lda     #$04
-	jsr     tosmoda0
-	sta     _y
-;
-; z++;
-;
-	inc     _z
-;
-; if (z == 16) {
+; if (field[x][y] > 0) index++;
 ;
 	ldx     #$00
-	lda     _z
-	cmp     #$10
-	bne     L0012
-;
-; state = 2;
-;
-	lda     #$02
-	sta     _state
-;
-; while ((field[x][y] > 0) && (state == 1)) {
-;
-L0012:	lda     _x
+	lda     _x
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -2738,16 +1790,71 @@ L0012:	lda     _x
 	sta     ptr1+1
 	ldy     _y
 	lda     (ptr1),y
-	beq     L0017
-	lda     _state
-	cmp     #$01
-	beq     L0002
+	beq     L001C
+	inc     _index
+;
+; for (x = 0; x <= 3; x++) {
+;
+L001C:	inc     _x
+	jmp     L001B
+;
+; for (y = 0; y <= 3; y++) {
+;
+L001D:	inc     _y
+	jmp     L001A
+;
+; if (index == 16) {
+;
+L001E:	lda     _index
+	cmp     #$10
+	bne     L000D
+;
+; GameOver(); 
+;
+	jsr     _GameOver
+;
+; } else {
+;
+	jmp     L001F
+;
+; x = rand() % 4;
+;
+L000D:	jsr     _rand
+	jsr     pushax
+	ldx     #$00
+	lda     #$04
+	jsr     tosmoda0
+	sta     _x
+;
+; y = rand() % 4;
+;
+	jsr     _rand
+	jsr     pushax
+	ldx     #$00
+	lda     #$04
+	jsr     tosmoda0
+	sta     _y
+;
+; while (field[x][y] > 0) {
+;
+	ldx     #$00
+	lda     _x
+	jsr     aslax2
+	clc
+	adc     #<(_field)
+	sta     ptr1
+	txa
+	adc     #>(_field)
+	sta     ptr1+1
+	ldy     _y
+	lda     (ptr1),y
+	bne     L000D
 ;
 ; if (state == 1) {
 ;
-L0017:	lda     _state
+	lda     _state
 	cmp     #$01
-	bne     L0018
+	bne     L001F
 ;
 ; if (rand() % 4 == 0) {
 ;
@@ -2757,9 +1864,9 @@ L0017:	lda     _state
 	lda     #$04
 	jsr     tosmoda0
 	cpx     #$00
-	bne     L000A
+	bne     L0011
 	cmp     #$00
-	bne     L0019
+	bne     L0021
 ;
 ; field[x][y] = 2;
 ;
@@ -2774,14 +1881,14 @@ L0017:	lda     _state
 	ldy     _y
 	lda     #$02
 ;
-; else {
+; } else {
 ;
-	jmp     L0011
+	jmp     L0019
 ;
 ; field[x][y] = 1;
 ;
-L000A:	ldx     #$00
-L0019:	lda     _x
+L0011:	ldx     #$00
+L0021:	lda     _x
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -2791,11 +1898,11 @@ L0019:	lda     _x
 	sta     ptr1+1
 	ldy     _y
 	lda     #$01
-L0011:	sta     (ptr1),y
+L0019:	sta     (ptr1),y
 ;
 ; needRedraw = 1;
 ;
-L0018:	lda     #$01
+L001F:	lda     #$01
 	sta     _needRedraw
 ;
 ; }
@@ -2815,6 +1922,12 @@ L0018:	lda     #$01
 .segment	"CODE"
 
 ;
+; stopGame = 1;
+;
+	jsr     decsp2
+	lda     #$01
+	sta     _stopGame
+;
 ; srand(Frame_Count);
 ;
 	ldx     #$00
@@ -2825,17 +1938,17 @@ L0018:	lda     #$01
 ;
 	lda     #$00
 	sta     _y
-L000B:	lda     _y
+L0010:	lda     _y
 	cmp     #$04
-	bcs     L000E
+	bcs     L0003
 ;
 ; for (x = 0; x <= 3; x++) {
 ;
 	lda     #$00
 	sta     _x
-L000C:	lda     _x
+L0011:	lda     _x
 	cmp     #$04
-	bcs     L000D
+	bcs     L0012
 ;
 ; field[x][y] = 0x00;
 ;
@@ -2855,16 +1968,53 @@ L000C:	lda     _x
 ; for (x = 0; x <= 3; x++) {
 ;
 	inc     _x
-	jmp     L000C
+	jmp     L0011
 ;
 ; for (y = 0; y <= 3; y++) {
 ;
-L000D:	inc     _y
-	jmp     L000B
+L0012:	inc     _y
+	jmp     L0010
+;
+; for (t = 383; t <= 392; t++) n2[t] = 0x00;
+;
+L0003:	ldy     #$00
+	lda     #$7F
+	sta     (sp),y
+	lda     #$01
+	iny
+	sta     (sp),y
+L000A:	ldy     #$01
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	cmp     #$89
+	txa
+	sbc     #$01
+	bvc     L000E
+	eor     #$80
+L000E:	bpl     L0013
+	iny
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	clc
+	adc     #<(_n2)
+	sta     ptr1
+	txa
+	adc     #>(_n2)
+	sta     ptr1+1
+	tya
+	sta     (ptr1),y
+	tax
+	lda     #$01
+	jsr     addeq0sp
+	jmp     L000A
 ;
 ; state = 1;
 ;
-L000E:	lda     #$01
+L0013:	lda     #$01
 	sta     _state
 ;
 ; putRandom();
@@ -2882,7 +2032,7 @@ L000E:	lda     #$01
 ;
 ; }
 ;
-	rts
+	jmp     incsp2
 
 .endproc
 
@@ -2924,13 +2074,10 @@ L0009:	lda     _NMI_flag
 ;
 	jsr     _move_logic
 ;
-; if (needRedraw != 0) {
+; if (needRedraw != 0) drawScreen();
 ;
 	lda     _needRedraw
 	beq     L000B
-;
-; drawScreen();
-;
 	jsr     _drawScreen
 ;
 ; NMI_flag = 0;
@@ -3016,55 +2163,129 @@ L0007:	rts
 .endproc
 
 ; ---------------------------------------------------------------
-; void __near__ shiftLine (void)
+; void __near__ fillField (unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3, unsigned char y0, unsigned char y1, unsigned char y2, unsigned char y3)
 ; ---------------------------------------------------------------
 
 .segment	"CODE"
 
-.proc	_shiftLine: near
+.proc	_fillField: near
 
 .segment	"CODE"
 
+;
+; void fillField(unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3, unsigned char y0, unsigned char y1, unsigned char y2, unsigned char y3) {
+;
+	jsr     pusha
+;
+; fld[0] = field[x0][y0];
+;
+	ldy     #$07
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax2
+	clc
+	adc     #<(_field)
+	sta     ptr1
+	txa
+	adc     #>(_field)
+	sta     ptr1+1
+	ldy     #$03
+	lda     (sp),y
+	tay
+	lda     (ptr1),y
+	sta     _fld
+;
+; fld[1] = field[x1][y1];
+;
+	ldy     #$06
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax2
+	clc
+	adc     #<(_field)
+	sta     ptr1
+	txa
+	adc     #>(_field)
+	sta     ptr1+1
+	ldy     #$02
+	lda     (sp),y
+	tay
+	lda     (ptr1),y
+	sta     _fld+1
+;
+; fld[2] = field[x2][y2];
+;
+	ldy     #$05
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax2
+	clc
+	adc     #<(_field)
+	sta     ptr1
+	txa
+	adc     #>(_field)
+	sta     ptr1+1
+	ldy     #$01
+	lda     (sp),y
+	tay
+	lda     (ptr1),y
+	sta     _fld+2
+;
+; fld[3] = field[x3][y3];
+;
+	ldy     #$04
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax2
+	clc
+	adc     #<(_field)
+	sta     ptr1
+	txa
+	adc     #>(_field)
+	sta     ptr1+1
+	ldy     #$00
+	lda     (sp),y
+	tay
+	lda     (ptr1),y
+	sta     _fld+3
 ;
 ; shiftOne();
 ;
 	jsr     _shiftOne
 ;
-; if ((fld[2] == fld[3]) && (fld[2] > 0)) { fld[2]++; fld[3] = 0; if (fld[2] == 11) state = 3; }
+; if ((fld[2] == fld[3]) && (fld[2] > 0)) { fld[2]++; fld[3] = 0; if (fld[2] == 11) YouWin(); }
 ;
 	lda     _fld+2
 	cmp     _fld+3
-	bne     L0013
+	bne     L0017
 	lda     _fld+2
-	beq     L0013
+	beq     L0017
 	inc     _fld+2
 	lda     #$00
 	sta     _fld+3
 	lda     _fld+2
 	cmp     #$0B
-	bne     L0013
-	lda     #$03
-	sta     _state
+	bne     L0017
+	jsr     _YouWin
 ;
-; if ((fld[1] == fld[2]) && (fld[1] > 0)) { fld[1]++; fld[2] = 0; if (fld[1] == 11) state = 3; }
+; if ((fld[1] == fld[2]) && (fld[1] > 0)) { fld[1]++; fld[2] = 0; if (fld[1] == 11) YouWin(); }
 ;
-L0013:	lda     _fld+1
+L0017:	lda     _fld+1
 	cmp     _fld+2
-	bne     L0016
+	bne     L001A
 	lda     _fld+1
-	beq     L0016
+	beq     L001A
 	inc     _fld+1
 	lda     #$00
 	sta     _fld+2
 	lda     _fld+1
 	cmp     #$0B
-	bne     L0016
-	lda     #$03
-	sta     _state
+	bne     L001A
+	jsr     _YouWin
 ;
-; if ((fld[0] == fld[1]) && (fld[0] > 0)) { fld[0]++; fld[1] = 0; if (fld[0] == 11) state = 3; } 
+; if ((fld[0] == fld[1]) && (fld[0] > 0)) { fld[0]++; fld[1] = 0; if (fld[0] == 11) YouWin(); }
 ;
-L0016:	lda     _fld
+L001A:	lda     _fld
 	cmp     _fld+1
 	bne     L0010
 	lda     _fld
@@ -3075,51 +2296,17 @@ L0016:	lda     _fld
 	lda     _fld
 	cmp     #$0B
 	bne     L0010
-	lda     #$03
-	sta     _state
+	jsr     _YouWin
 ;
 ; shiftOne();
 ;
-L0010:	jmp     _shiftOne
-
-.endproc
-
-; ---------------------------------------------------------------
-; void __near__ fillFldX (unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw)
-; ---------------------------------------------------------------
-
-.segment	"CODE"
-
-.proc	_fillFldX: near
-
-.segment	"CODE"
-
+L0010:	jsr     _shiftOne
 ;
-; void fillFldX(unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw) {
+; field[x0][y0] = fld[0];
 ;
-	jsr     pusha
-;
-; fld[0] = field[rw][n0];
-;
+	ldy     #$07
 	ldx     #$00
-	lda     (sp,x)
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$04
 	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld
-;
-; fld[1] = field[rw][n1];
-;
-	ldx     #$00
-	lda     (sp,x)
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -3129,14 +2316,22 @@ L0010:	jmp     _shiftOne
 	sta     ptr1+1
 	ldy     #$03
 	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+1
+	clc
+	adc     ptr1
+	ldx     ptr1+1
+	bcc     L0011
+	inx
+L0011:	sta     ptr1
+	stx     ptr1+1
+	lda     _fld
+	ldy     #$00
+	sta     (ptr1),y
 ;
-; fld[2] = field[rw][n2];
+; field[x1][y1] = fld[1];
 ;
+	ldy     #$06
 	ldx     #$00
-	lda     (sp,x)
+	lda     (sp),y
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -3146,14 +2341,22 @@ L0010:	jmp     _shiftOne
 	sta     ptr1+1
 	ldy     #$02
 	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+2
+	clc
+	adc     ptr1
+	ldx     ptr1+1
+	bcc     L0012
+	inx
+L0012:	sta     ptr1
+	stx     ptr1+1
+	lda     _fld+1
+	ldy     #$00
+	sta     (ptr1),y
 ;
-; fld[3] = field[rw][n3];
+; field[x2][y2] = fld[2];
 ;
+	ldy     #$05
 	ldx     #$00
-	lda     (sp,x)
+	lda     (sp),y
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -3163,88 +2366,20 @@ L0010:	jmp     _shiftOne
 	sta     ptr1+1
 	ldy     #$01
 	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+3
-;
-; shiftLine();
-;
-	jsr     _shiftLine
-;
-; field[rw][n0] = fld[0];
-;
-	ldx     #$00
-	lda     (sp,x)
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$04
-	lda     (sp),y
 	clc
 	adc     ptr1
 	ldx     ptr1+1
-	bcc     L0002
+	bcc     L0013
 	inx
-L0002:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld
-	ldy     #$00
-	sta     (ptr1),y
-;
-; field[rw][n1] = fld[1];
-;
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$03
-	lda     (sp),y
-	clc
-	adc     ptr1
-	ldx     ptr1+1
-	bcc     L0003
-	inx
-L0003:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld+1
-	ldy     #$00
-	sta     (ptr1),y
-;
-; field[rw][n2] = fld[2];
-;
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$02
-	lda     (sp),y
-	clc
-	adc     ptr1
-	ldx     ptr1+1
-	bcc     L0004
-	inx
-L0004:	sta     ptr1
+L0013:	sta     ptr1
 	stx     ptr1+1
 	lda     _fld+2
-	ldy     #$00
+	dey
 	sta     (ptr1),y
 ;
-; field[rw][n3] = fld[3];
+; field[x3][y3] = fld[3];
 ;
+	ldy     #$04
 	ldx     #$00
 	lda     (sp),y
 	jsr     aslax2
@@ -3254,215 +2389,125 @@ L0004:	sta     ptr1
 	txa
 	adc     #>(_field)
 	sta     ptr1+1
-	iny
+	ldy     #$00
 	lda     (sp),y
 	clc
 	adc     ptr1
 	ldx     ptr1+1
-	bcc     L0005
+	bcc     L0014
 	inx
-L0005:	sta     ptr1
+L0014:	sta     ptr1
 	stx     ptr1+1
 	lda     _fld+3
-	dey
 	sta     (ptr1),y
 ;
 ; }
 ;
-	jmp     incsp5
+	jmp     incsp8
 
 .endproc
 
 ; ---------------------------------------------------------------
-; void __near__ fillFldY (unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw)
+; void __near__ fillChar (int adr, unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3)
 ; ---------------------------------------------------------------
 
 .segment	"CODE"
 
-.proc	_fillFldY: near
+.proc	_fillChar: near
 
 .segment	"CODE"
 
 ;
-; void fillFldY(unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw) {
+; void fillChar(int adr, unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3) {
 ;
 	jsr     pusha
 ;
-; fld[0] = field[n0][rw];
+; n2[adr + 0] = x0;
 ;
-	ldy     #$04
-	ldx     #$00
+	ldy     #$05
 	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld
-;
-; fld[1] = field[n1][rw];
-;
-	ldy     #$03
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+1
-;
-; fld[2] = field[n2][rw];
-;
-	ldy     #$02
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+2
-;
-; fld[3] = field[n3][rw];
-;
-	ldy     #$01
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	dey
-	lda     (sp),y
-	tay
-	lda     (ptr1),y
-	sta     _fld+3
-;
-; shiftLine();
-;
-	jsr     _shiftLine
-;
-; field[n0][rw] = fld[0];
-;
-	ldy     #$04
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	clc
-	adc     ptr1
-	ldx     ptr1+1
-	bcc     L0002
-	inx
-L0002:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld
-	sta     (ptr1),y
-;
-; field[n1][rw] = fld[1];
-;
-	ldy     #$03
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	clc
-	adc     ptr1
-	ldx     ptr1+1
-	bcc     L0003
-	inx
-L0003:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld+1
-	sta     (ptr1),y
-;
-; field[n2][rw] = fld[2];
-;
-	ldy     #$02
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
-	ldy     #$00
-	lda     (sp),y
-	clc
-	adc     ptr1
-	ldx     ptr1+1
-	bcc     L0004
-	inx
-L0004:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld+2
-	sta     (ptr1),y
-;
-; field[n3][rw] = fld[3];
-;
-	iny
-	ldx     #$00
-	lda     (sp),y
-	jsr     aslax2
-	clc
-	adc     #<(_field)
-	sta     ptr1
-	txa
-	adc     #>(_field)
-	sta     ptr1+1
+	tax
 	dey
 	lda     (sp),y
 	clc
-	adc     ptr1
-	ldx     ptr1+1
+	adc     #<(_n2)
+	sta     ptr1
+	txa
+	adc     #>(_n2)
+	sta     ptr1+1
+	dey
+	lda     (sp),y
+	ldy     #$00
+	sta     (ptr1),y
+;
+; n2[adr + 1] = x1;
+;
+	ldy     #$05
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	clc
+	adc     #$01
 	bcc     L0005
 	inx
-L0005:	sta     ptr1
-	stx     ptr1+1
-	lda     _fld+3
+	clc
+L0005:	adc     #<(_n2)
+	sta     ptr1
+	txa
+	adc     #>(_n2)
+	sta     ptr1+1
+	ldy     #$02
+	lda     (sp),y
+	ldy     #$00
+	sta     (ptr1),y
+;
+; n2[adr + 2] = x2;
+;
+	ldy     #$05
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	clc
+	adc     #$02
+	bcc     L0006
+	inx
+	clc
+L0006:	adc     #<(_n2)
+	sta     ptr1
+	txa
+	adc     #>(_n2)
+	sta     ptr1+1
+	ldy     #$01
+	lda     (sp),y
+	dey
+	sta     (ptr1),y
+;
+; n2[adr + 3] = x3;
+;
+	ldy     #$05
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	clc
+	adc     #$03
+	bcc     L0007
+	inx
+	clc
+L0007:	adc     #<(_n2)
+	sta     ptr1
+	txa
+	adc     #>(_n2)
+	sta     ptr1+1
+	ldy     #$00
+	lda     (sp),y
 	sta     (ptr1),y
 ;
 ; }
 ;
-	jmp     incsp5
+	jmp     incsp6
 
 .endproc
 
@@ -3481,674 +2526,341 @@ L0005:	sta     ptr1
 ;
 	jsr     pushax
 ;
-; n2[adr]   = 0x00;
+; fillChar(adr, 0x00, 0x00, 0x00, 0x00);    // очистим поле
 ;
-	ldy     #$01
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	tya
-	sta     (ptr1),y
-;
-; n2[adr+1] = 0x00;
-;
+	ldy     #$03
+	sta     (sp),y
 	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L0028
-	inx
-	clc
-L0028:	adc     #<(_n2)
-	sta     ptr1
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	tya
-	sta     (ptr1),y
-;
-; n2[adr+2] = 0x00;
-;
-	iny
-	lda     (sp),y
-	tax
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
 	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0029
-	inx
-	clc
-L0029:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	tya
-	sta     (ptr1),y
-;
-; n2[adr+3] = 0x00;
-;
-	iny
-	lda     (sp),y
-	tax
+	sta     (sp),y
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L002A
-	inx
-	clc
-L002A:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	tya
-	sta     (ptr1),y
+	sta     (sp),y
+	jsr     _fillChar
 ;
-; if (n == 1) { 
+; if (n ==  1) fillChar(adr, 0x00, 0x00, 0x00, 0x03); // 2
 ;
 	ldy     #$02
 	lda     (sp),y
 	cmp     #$01
-	bne     L0044
-;
-; n2[adr + 3] = 0x03; 
-;
-	dey
+	bne     L000E
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L002B
-	inx
-	clc
-L002B:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
+	dey
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 2) { 
+; if (n ==  2) fillChar(adr, 0x00, 0x00, 0x00, 0x05); // 4
 ;
 	ldy     #$02
-L0044:	lda     (sp),y
+L000E:	lda     (sp),y
 	cmp     #$02
-	bne     L0046
-;
-; n2[adr + 3] = 0x05; 
-;
-	dey
+	bne     L0010
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L002C
-	inx
-	clc
-L002C:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
+	dey
+	sta     (sp),y
 	lda     #$05
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 3) { 
+; if (n ==  3) fillChar(adr, 0x00, 0x00, 0x00, 0x09); // 8
 ;
 	ldy     #$02
-L0046:	lda     (sp),y
+L0010:	lda     (sp),y
 	cmp     #$03
-	bne     L0048
-;
-; n2[adr + 3] = 0x09; 
-;
-	dey
+	bne     L0012
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L002D
-	inx
-	clc
-L002D:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
+	dey
+	sta     (sp),y
 	lda     #$09
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 4) { 
+; if (n ==  4) fillChar(adr, 0x00, 0x00, 0x02, 0x07); // 16
 ;
 	ldy     #$02
-L0048:	lda     (sp),y
+L0012:	lda     (sp),y
 	cmp     #$04
-	bne     L004A
-;
-; n2[adr + 2] = 0x02;
-;
-	dey
+	bne     L0014
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L002E
-	inx
-	clc
-L002E:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	lda     #$02
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x07;
-;
+	ldy     #$03
+	sta     (sp),y
 	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L002F
-	inx
-	clc
-L002F:	adc     #<(_n2)
-	sta     ptr1
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
+	lda     #$02
+	dey
+	sta     (sp),y
 	lda     #$07
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 5) {
+; if (n ==  5) fillChar(adr, 0x00, 0x00, 0x04, 0x03); // 32
 ;
 	ldy     #$02
-L004A:	lda     (sp),y
+L0014:	lda     (sp),y
 	cmp     #$05
-	bne     L004C
-;
-; n2[adr + 2] = 0x04;
-;
-	dey
+	bne     L0016
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0030
-	inx
-	clc
-L0030:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
 	lda     #$04
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x03;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L0031
-	inx
-	clc
-L0031:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 6) { 
+; if (n ==  6) fillChar(adr, 0x00, 0x00, 0x07, 0x05); // 64
 ;
 	ldy     #$02
-L004C:	lda     (sp),y
+L0016:	lda     (sp),y
 	cmp     #$06
-	bne     L004E
-;
-; n2[adr + 2] = 0x07;
-;
-	dey
+	bne     L0018
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0032
-	inx
-	clc
-L0032:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	lda     #$07
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x05;
-;
+	ldy     #$03
+	sta     (sp),y
 	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L0033
-	inx
-	clc
-L0033:	adc     #<(_n2)
-	sta     ptr1
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	dey
+	sta     (sp),y
+	lda     #$07
+	dey
+	sta     (sp),y
 	lda     #$05
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 7) { 
+; if (n ==  7) fillChar(adr, 0x00, 0x02, 0x03, 0x09); // 128
 ;
 	ldy     #$02
-L004E:	lda     (sp),y
+L0018:	lda     (sp),y
 	cmp     #$07
-	bne     L0050
-;
-; n2[adr + 1] = 0x02;
-;
-	dey
+	bne     L001A
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L0034
-	inx
-	clc
-L0034:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
-	lda     #$02
-	sta     (ptr1),y
-;
-; n2[adr + 2] = 0x03;
-;
+	ldy     #$03
+	sta     (sp),y
 	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0035
-	inx
-	clc
-L0035:	adc     #<(_n2)
-	sta     ptr1
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
+	tya
+	dey
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x09;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L0036
-	inx
-	clc
-L0036:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$09
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 8) { 
+; if (n ==  8) fillChar(adr, 0x00, 0x03, 0x06, 0x07); // 256
 ;
 	ldy     #$02
-L0050:	lda     (sp),y
+L001A:	lda     (sp),y
 	cmp     #$08
-	bne     L0052
-;
-; n2[adr + 1] = 0x03;
-;
-	dey
+	bne     L001C
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L0037
-	inx
-	clc
-L0037:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
-;
-; n2[adr + 2] = 0x06;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0038
-	inx
-	clc
-L0038:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$06
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x07;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L0039
-	inx
-	clc
-L0039:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$07
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 9) { 
+; if (n ==  9) fillChar(adr, 0x00, 0x06, 0x02, 0x03); // 512
 ;
 	ldy     #$02
-L0052:	lda     (sp),y
+L001C:	lda     (sp),y
 	cmp     #$09
-	bne     L0054
-;
-; n2[adr + 1] = 0x06;
-;
-	dey
+	bne     L001E
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L003A
-	inx
-	clc
-L003A:	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
+	lda     #$00
+	ldy     #$02
+	sta     (sp),y
 	lda     #$06
-	sta     (ptr1),y
-;
-; n2[adr + 2] = 0x02;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L003B
-	inx
-	clc
-L003B:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$02
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x03;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L003C
-	inx
-	clc
-L003C:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 10) { 
+; if (n == 10) fillChar(adr, 0x02, 0x01, 0x03, 0x05); // 1024
 ;
 	ldy     #$02
-L0054:	lda     (sp),y
+L001E:	lda     (sp),y
 	cmp     #$0A
-	bne     L0056
-;
-; n2[adr] = 0x02;
-;
-	dey
+	bne     L0020
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$02
-	sta     (ptr1),y
-;
-; n2[adr + 1] = 0x01;
-;
-	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L003D
-	inx
-	clc
-L003D:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	tay
+	sta     (sp),y
 	lda     #$01
-	sta     (ptr1),y
-;
-; n2[adr + 2] = 0x03;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L003E
-	inx
-	clc
-L003E:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x05;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L003F
-	inx
-	clc
-L003F:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$05
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
-; if (n == 11) {
+; if (n == 11) fillChar(adr, 0x03, 0x01, 0x05, 0x09); // 2048
 ;
 	ldy     #$02
-L0056:	lda     (sp),y
+L0020:	lda     (sp),y
 	cmp     #$0B
-	bne     L0024
-;
-; n2[adr] = 0x03;
-;
-	dey
+	bne     L000C
+	jsr     decsp5
+	ldy     #$06
 	lda     (sp),y
 	tax
 	dey
 	lda     (sp),y
-	clc
-	adc     #<(_n2)
-	sta     ptr1
+	ldy     #$03
+	sta     (sp),y
+	iny
 	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$03
-	sta     (ptr1),y
-;
-; n2[adr + 1] = 0x01;
-;
-	iny
-	lda     (sp),y
-	tax
-	dey
-	lda     (sp),y
-	clc
-	adc     #$01
-	bcc     L0040
-	inx
-	clc
-L0040:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	ldy     #$02
+	sta     (sp),y
 	lda     #$01
-	sta     (ptr1),y
-;
-; n2[adr + 2] = 0x05;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$02
-	bcc     L0041
-	inx
-	clc
-L0041:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$05
-	sta     (ptr1),y
-;
-; n2[adr + 3] = 0x09;
-;
-	iny
-	lda     (sp),y
-	tax
 	dey
-	lda     (sp),y
-	clc
-	adc     #$03
-	bcc     L0042
-	inx
-	clc
-L0042:	adc     #<(_n2)
-	sta     ptr1
-	txa
-	adc     #>(_n2)
-	sta     ptr1+1
+	sta     (sp),y
 	lda     #$09
-	sta     (ptr1),y
+	jsr     _fillChar
 ;
 ; }
 ;
-L0024:	jmp     incsp3
+L000C:	jmp     incsp3
 
 .endproc
 

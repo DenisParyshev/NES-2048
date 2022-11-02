@@ -8,6 +8,7 @@ set CC65_HOME=D:\develop\nes\soft\cc65\bin\
 
 del %name%.nes
 del %name%.s
+del %name%.bin
 D:\develop\nes\soft\cc65\bin\cc65 -Oi %name%.c --add-source
 D:\develop\nes\soft\cc65\bin\ca65 reset.s
 D:\develop\nes\soft\cc65\bin\ca65 %name%.s

@@ -2,55 +2,94 @@
 	Для сборки используется cc65 
  */
 
-
 #include "defines.c"
 #include <stdlib.h>
 
 // импортируем 4 экрана (упакованные в RLE), которые используются в игре
 #include "screens/1.h" // Начальный экран 
 #include "screens/2.h" // Игровая область
-#include "screens/3.h" // Игра окончена
-#include "screens/4.h" // Игрок выиграл
 
 // массив указателей на экраны
-const unsigned char * const All_Backgrounds[]={n1,n2,n3,n4};
+const unsigned char* const Screens[] = { n1, n2 };
+
+// завершаем игру и выводим GAME OVER!
+void GameOver(void) {
+	stopGame = 1;
+	needRedraw = 1;
+	n2[383] = 0x35;
+	n2[384] = 0x33;
+	n2[385] = 0x36;
+	n2[386] = 0x37;
+	n2[387] = 0x00;
+	n2[388] = 0x32;
+	n2[389] = 0x38;
+	n2[390] = 0x37;
+	n2[391] = 0x39;
+	n2[392] = 0x3f;
+}
+
+// завершаем игру и выводим поздравление
+void YouWin(void) {
+	stopGame = 1;
+	needRedraw = 1;
+	n2[384] = 0x3a;
+	n2[385] = 0x32;
+	n2[386] = 0x3b;
+	n2[387] = 0x00;
+	n2[388] = 0x3c;
+	n2[389] = 0x3d;
+	n2[390] = 0x3e;
+	n2[391] = 0x3f;
+}
 
 // заполним следующую свободную клетку
 void putRandom(void) {
-	x = rand() % 4;
-	y = rand() % 4;
-	z = 1;
-
-	// проверим, заполнено ли это место
-	while ((field[x][y] > 0) && (state == 1)) {
-		x = rand() % 4;
-		y = rand() % 4;
-		z++;
-		// если все клетки заполнены, завершим игру
-		if (z == 16) {
-			state = 2;
+	// проверим окончание игры
+	index = 0;
+	for (y = 0; y <= 3; y++) {
+		for (x = 0; x <= 3; x++) {
+			if (field[x][y] > 0) index++;
 		}
 	}
-	if (state == 1) {
-		// с вероятностью 25% выводим 4
-		if (rand() % 4 == 0) {
-			field[x][y] = 2;
+	if (index == 16) {
+		GameOver(); 
+	} else {
+		// проверим, заполнено ли это место
+		x = rand() % 4;
+		y = rand() % 4; 
+		while (field[x][y] > 0) {
+			x = rand() % 4;
+			y = rand() % 4;
 		}
-		else {
-			field[x][y] = 1;
+		if (state == 1) {
+			// с вероятностью 25% выводим 4
+			if (rand() % 4 == 0) {
+				field[x][y] = 2;
+			} else {
+				field[x][y] = 1;
+			}
 		}
 	}
 	needRedraw = 1;
 }
 
-// очищаем игровое поле
+// инициализация игры
 void initGame(void) {
+	// инициализация рандомайзера и очистка игрового поля
+	int t;
+	stopGame = 1;
 	srand(Frame_Count);
 	for (y = 0; y <= 3; y++) {
 		for (x = 0; x <= 3; x++) {
 			field[x][y] = 0x00;
 		}
 	}
+	// раскомментировать для теста экрана победы
+	//field[0][0] = 10;
+	//field[0][1] = 10;
+	// скроем строку GAME OVER!
+	for (t = 383; t <= 392; t++) n2[t] = 0x00;
+	// покажем два первых числа
 	state = 1;
 	putRandom();
 	putRandom();
@@ -64,19 +103,14 @@ void main (void) {
 	Load_Palette();
 	state = 0; // начало игры
 	needRedraw = 1;
-
 	// основной цикл
 	while (1){ 	
 		// ждём обратный ход луча
 		while (NMI_flag == 0); 
-
 		// проверим джойстик		
 		move_logic();
-
 		// проверим, нужно ли обновить экран
-		if (needRedraw != 0) {
-			drawScreen();
-		}
+		if (needRedraw != 0) drawScreen();
 		// сбросить флаг прерывания
 		NMI_flag = 0;
 	}
@@ -99,13 +133,11 @@ void Load_Palette (void) {
 	All_Off();
 	PPU_ADDRESS = 0x3f;
 	PPU_ADDRESS = 0x00;
-	for( index = 0; index < sizeof(PALETTE); ++index ){
-		PPU_DATA = PALETTE[index];
-	}
+	for (index = 0; index < sizeof(PALETTE); ++index) PPU_DATA = PALETTE[index];
 	All_On();
 }
 
-// сделать сдвиг одной линии
+// сделать сдвиг одной линии во временной таблице
 void shiftOne(void) {
 	if (fld[3] == 0) { fld[3] = fld[2]; fld[2] = 0; }
 	if (fld[2] == 0) { fld[2] = fld[1]; fld[1] = 0; }
@@ -115,39 +147,26 @@ void shiftOne(void) {
 	if (fld[3] == 0) { fld[3] = fld[2]; fld[2] = 0; }
 }
 
-// сделать сдвиг массива со сложением
-void shiftLine(void) {
+// сделать сдвиг со сложением
+void fillField(unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3, unsigned char y0, unsigned char y1, unsigned char y2, unsigned char y3) {
+	// заполнить временную строку из игрового поля
+	fld[0] = field[x0][y0];
+	fld[1] = field[x1][y1];
+	fld[2] = field[x2][y2];
+	fld[3] = field[x3][y3];
+	// сделать сдвиг массива
 	shiftOne();
-	if ((fld[2] == fld[3]) && (fld[2] > 0)) { fld[2]++; fld[3] = 0; if (fld[2] == 11) state = 3; }
-	if ((fld[1] == fld[2]) && (fld[1] > 0)) { fld[1]++; fld[2] = 0; if (fld[1] == 11) state = 3; }
-	if ((fld[0] == fld[1]) && (fld[0] > 0)) { fld[0]++; fld[1] = 0; if (fld[0] == 11) state = 3; }	
+	// выполнить сложение
+	if ((fld[2] == fld[3]) && (fld[2] > 0)) { fld[2]++; fld[3] = 0; if (fld[2] == 11) YouWin(); }
+	if ((fld[1] == fld[2]) && (fld[1] > 0)) { fld[1]++; fld[2] = 0; if (fld[1] == 11) YouWin(); }
+	if ((fld[0] == fld[1]) && (fld[0] > 0)) { fld[0]++; fld[1] = 0; if (fld[0] == 11) YouWin(); }
+	// повторно сделать сдвиг массива
 	shiftOne();
-}
-
-// заполнить массив и сделать сложение по строке
-void fillFldX(unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw) {
-	fld[0] = field[rw][n0];
-	fld[1] = field[rw][n1];
-	fld[2] = field[rw][n2];
-	fld[3] = field[rw][n3];
-	shiftLine();
-	field[rw][n0] = fld[0];
-	field[rw][n1] = fld[1];
-	field[rw][n2] = fld[2];
-	field[rw][n3] = fld[3];
-}
-
-// заполнить массив и сделать сложение по столбцу
-void fillFldY(unsigned char n0, unsigned char n1, unsigned char n2, unsigned char n3, unsigned char rw) {
-	fld[0] = field[n0][rw];
-	fld[1] = field[n1][rw];
-	fld[2] = field[n2][rw];
-	fld[3] = field[n3][rw];
-	shiftLine();
-	field[n0][rw] = fld[0];
-	field[n1][rw] = fld[1];
-	field[n2][rw] = fld[2];
-	field[n3][rw] = fld[3];
+	// вернуть значения из временной строки в игровое поле
+	field[x0][y0] = fld[0];
+	field[x1][y1] = fld[1];
+	field[x2][y2] = fld[2];
+	field[x3][y3] = fld[3];
 }
 
 // обработчик нажатия клавиш
@@ -155,100 +174,61 @@ void move_logic(void) {
 	// прочитаем джойстик
 	Get_Input();
 	// анализируем курсор только в режиме игры
-	if (state == 1) {
-		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { // нажали вправо
-			for (index = 0; index < 4; ++index) fillFldY(0, 1, 2, 3, index);
+	if ((state == 1) && (stopGame == 0)) {
+		// нажали вправо
+		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { 
+			for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);
 			putRandom();
 		}
-		if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { // нажали влево
-			for (index = 0; index < 4; ++index) fillFldY(3, 2, 1, 0, index);
+		// нажали влево
+		if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { 
+			for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);
 			putRandom();
 		}
-		if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { // нажали вниз
-			for (index = 0; index < 4; ++index) fillFldX(0, 1, 2, 3, index);
+		// нажали вниз
+		if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { 
+			for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);
 			putRandom();
 		}
-		if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { // нажали вверх
-			for (index = 0; index < 4; ++index) fillFldX(3, 2, 1, 0, index);
+		// нажали вверх
+		if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { 
+			for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);
 			putRandom();
 		}
 	}
 	// анализируем кнопку START
 	if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
-		if (state != 1) {
+		if ((state != 1) || (stopGame == 1)) {
 			initGame();
 			state = 1;
 			needRedraw = 1;
+			stopGame = 0;
 		}
 	}
 }
 
+// заполнить 4 позиции числа
+void fillChar(int adr, unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3) {
+	n2[adr + 0] = x0;
+	n2[adr + 1] = x1;
+	n2[adr + 2] = x2;
+	n2[adr + 3] = x3;
+}
+
 // мапер между массивом данных и выводимыми на экран символами
 void mapField(unsigned char n, int adr) {
-	n2[adr]   = 0x00;
-	n2[adr+1] = 0x00;
-	n2[adr+2] = 0x00;
-	n2[adr+3] = 0x00;
-
-	//2
-	if (n == 1) { 
-		n2[adr + 3] = 0x03; 
-	}
-	//4
-	if (n == 2) { 
-		n2[adr + 3] = 0x05; 
-	}
-	//8
-	if (n == 3) { 
-		n2[adr + 3] = 0x09; 
-	}
-	//16
-	if (n == 4) { 
-		n2[adr + 2] = 0x02;
-		n2[adr + 3] = 0x07;
-	}
-	//32
-	if (n == 5) {
-		n2[adr + 2] = 0x04;
-		n2[adr + 3] = 0x03;
-	}
-	//64
-	if (n == 6) { 
-		n2[adr + 2] = 0x07;
-		n2[adr + 3] = 0x05;
-	}
-	//128
-	if (n == 7) { 
-		n2[adr + 1] = 0x02;
-		n2[adr + 2] = 0x03;
-		n2[adr + 3] = 0x09;
-	}
-	//256
-	if (n == 8) { 
-		n2[adr + 1] = 0x03;
-		n2[adr + 2] = 0x06;
-		n2[adr + 3] = 0x07;
-	}
-	//512
-	if (n == 9) { 
-		n2[adr + 1] = 0x06;
-		n2[adr + 2] = 0x02;
-		n2[adr + 3] = 0x03;
-	}
-	//1024
-	if (n == 10) { 
-		n2[adr] = 0x02;
-		n2[adr + 1] = 0x01;
-		n2[adr + 2] = 0x03;
-		n2[adr + 3] = 0x05;
-	}
-	//2048
-	if (n == 11) {
-		n2[adr] = 0x03;
-		n2[adr + 1] = 0x01;
-		n2[adr + 2] = 0x05;
-		n2[adr + 3] = 0x09;
-	}
+	fillChar(adr, 0x00, 0x00, 0x00, 0x00);				// очистим поле
+	if (n ==  1) fillChar(adr, 0x00, 0x00, 0x00, 0x03);	// 2
+	if (n ==  2) fillChar(adr, 0x00, 0x00, 0x00, 0x05);	// 4
+	if (n ==  3) fillChar(adr, 0x00, 0x00, 0x00, 0x09);	// 8
+	if (n ==  4) fillChar(adr, 0x00, 0x00, 0x02, 0x07);	// 16
+	if (n ==  5) fillChar(adr, 0x00, 0x00, 0x04, 0x03);	// 32
+	if (n ==  6) fillChar(adr, 0x00, 0x00, 0x07, 0x05);	// 64
+	if (n ==  7) fillChar(adr, 0x00, 0x02, 0x03, 0x09);	// 128
+	if (n ==  8) fillChar(adr, 0x00, 0x03, 0x06, 0x07);	// 256
+	if (n ==  9) fillChar(adr, 0x00, 0x06, 0x02, 0x03);	// 512
+	if (n == 10) fillChar(adr, 0x02, 0x01, 0x03, 0x05);	// 1024
+	if (n == 11) fillChar(adr, 0x03, 0x01, 0x05, 0x09);	// 2048
 }
 
 // обновить экран
@@ -257,20 +237,21 @@ void drawScreen(void) {
 	All_Off();
 	PPU_ADDRESS = 0x20;
 	PPU_ADDRESS = 0x00;
+	// перерисовка игрового поля
 	if (state == 1) {
-		z = 0;
+		index = 0;
 		for (y = 0; y <= 3; y++) {
 			for (x = 0; x <= 3; x++) {
-				mapField(field[x][y], map[z]);
-				z++;
+				mapField(field[x][y], map[index]);
+				index++;
 			}
 		}
 	}
 	// выводим данные в PPU
-	UnRLE(All_Backgrounds[state]);
-	Wait_Vblank();		// не включаем экран при обратном ходе луча
+	UnRLE(Screens[state]);
+	// не включаем экран при обратном ходе луча
+	Wait_Vblank();		
 	All_On();
-
 	// экран обновлён, сборосим признак необходимости обновления
 	needRedraw = 0;
 }
