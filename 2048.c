@@ -12,6 +12,28 @@
 // массив указателей на экраны
 const unsigned char* const Screens[] = { n1, n2 };
 
+// отклчение вывода на экран
+void All_Off(void) {
+	PPU_CTRL = 0;
+	PPU_MASK = 0;
+}
+
+// включение вывода на экран
+void All_On(void) {
+	PPU_CTRL = 0x90;
+	PPU_MASK = 0x1e;
+}
+
+// загрузка основной палитры в PPU
+void Load_Palette(void) {
+	All_Off();
+	PPU_ADDRESS = 0x3f;
+	PPU_ADDRESS = 0x00;
+	for (index = 0; index < sizeof(PALETTE); ++index) 
+		PPU_DATA = PALETTE[index];
+	All_On();
+}
+
 // завершаем игру и выводим GAME OVER!
 void GameOver(void) {
 	stopGame = 1;
@@ -46,29 +68,24 @@ void YouWin(void) {
 void putRandom(void) {
 	// проверим окончание игры
 	index = 0;
-	for (y = 0; y <= 3; y++) {
-		for (x = 0; x <= 3; x++) {
+	for (y = 0; y <= 3; y++) 
+		for (x = 0; x <= 3; x++) 
 			if (field[x][y] > 0) index++;
-		}
-	}
 	if (index == 16) {
 		GameOver(); 
 	} else {
-		// проверим, заполнено ли это место
-		x = rand() % 4;
-		y = rand() % 4; 
-		while (field[x][y] > 0) {
+		// поместим новое числов в свободную €чейку
+		do {
 			x = rand() % 4;
 			y = rand() % 4;
-		}
-		if (state == 1) {
-			// с веро€тностью 25% выводим 4
+		} while (field[x][y] > 0);
+		// с веро€тностью 25% выводим 4
+		if (state == 1) 
 			if (rand() % 4 == 0) {
 				field[x][y] = 2;
 			} else {
 				field[x][y] = 1;
 			}
-		}
 	}
 	needRedraw = 1;
 }
@@ -79,62 +96,17 @@ void initGame(void) {
 	int t;
 	stopGame = 1;
 	srand(Frame_Count);
-	for (y = 0; y <= 3; y++) {
-		for (x = 0; x <= 3; x++) {
+	for (y = 0; y <= 3; y++)
+		for (x = 0; x <= 3; x++) 
 			field[x][y] = 0x00;
-		}
-	}
-	// раскомментировать дл€ теста экрана победы
-	//field[0][0] = 10;
-	//field[0][1] = 10;
 	// скроем строку GAME OVER!
-	for (t = 383; t <= 392; t++) n2[t] = 0x00;
+	for (t = 383; t <= 392; t++) 
+		n2[t] = 0x00;
 	// покажем два первых числа
 	state = 1;
 	putRandom();
 	putRandom();
 	state = 0;
-}
-
-// вход в игру
-void main (void) {
-	//инициализаци€
-	initGame();
-	Load_Palette();
-	state = 0; // начало игры
-	needRedraw = 1;
-	// основной цикл
-	while (1){ 	
-		// ждЄм обратный ход луча
-		while (NMI_flag == 0); 
-		// проверим джойстик		
-		move_logic();
-		// проверим, нужно ли обновить экран
-		if (needRedraw != 0) drawScreen();
-		// сбросить флаг прерывани€
-		NMI_flag = 0;
-	}
-}
-
-// отклчение вывода на экран
-void All_Off(void) {
-	PPU_CTRL = 0;
-	PPU_MASK = 0;
-}
-
-// включение вывода на экран
-void All_On(void) {
-	PPU_CTRL = 0x90; // screen is on, NMI on
-	PPU_MASK = 0x1e;
-}
-
-// загрузка основной палитры в PPU
-void Load_Palette (void) {
-	All_Off();
-	PPU_ADDRESS = 0x3f;
-	PPU_ADDRESS = 0x00;
-	for (index = 0; index < sizeof(PALETTE); ++index) PPU_DATA = PALETTE[index];
-	All_On();
 }
 
 // сделать сдвиг одной линии во временной таблице
@@ -175,41 +147,27 @@ void move_logic(void) {
 	Get_Input();
 	// анализируем курсор только в режиме игры
 	if ((state == 1) && (stopGame == 0)) {
-		// нажали вправо
-		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { 
-			for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);
-			putRandom();
-		}
-		// нажали влево
-		if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { 
-			for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);
-			putRandom();
-		}
-		// нажали вниз
-		if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { 
-			for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);
-			putRandom();
-		}
-		// нажали вверх
-		if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { 
-			for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);
-			putRandom();
-		}
+		index = 0;
+		if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0))	for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);	// нажали вправо
+		if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))		for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);	// нажали влево
+		if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))		for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);	// нажали вниз
+		if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))		for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);	// нажали вверх
+		// если была нажата кнопка, разместим следующее число
+		if (index > 0) putRandom();
 	}
 	// анализируем кнопку START
-	if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
+	if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) 
 		if ((state != 1) || (stopGame == 1)) {
 			initGame();
 			state = 1;
 			needRedraw = 1;
 			stopGame = 0;
 		}
-	}
 }
 
 // заполнить 4 позиции числа
 void fillChar(int adr, unsigned char x0, unsigned char x1, unsigned char x2, unsigned char x3) {
-	n2[adr + 0] = x0;
+	n2[adr]     = x0;
 	n2[adr + 1] = x1;
 	n2[adr + 2] = x2;
 	n2[adr + 3] = x3;
@@ -239,13 +197,9 @@ void drawScreen(void) {
 	PPU_ADDRESS = 0x00;
 	// перерисовка игрового пол€
 	if (state == 1) {
-		index = 0;
-		for (y = 0; y <= 3; y++) {
-			for (x = 0; x <= 3; x++) {
-				mapField(field[x][y], map[index]);
-				index++;
-			}
-		}
+		for (y = 0; y <= 3; y++) 
+			for (x = 0; x <= 3; x++) 
+				mapField(field[x][y], map[y * 4 + x]);
 	}
 	// выводим данные в PPU
 	UnRLE(Screens[state]);
@@ -254,4 +208,24 @@ void drawScreen(void) {
 	All_On();
 	// экран обновлЄн, сборосим признак необходимости обновлени€
 	needRedraw = 0;
+}
+
+// вход в игру
+void main(void) {
+	//инициализаци€
+	initGame();
+	Load_Palette();
+	state = 0;
+	needRedraw = 1;
+	// основной цикл
+	while (1) {
+		// ждЄм обратный ход луча
+		while (NMI_flag == 0);
+		// проверим джойстик		
+		move_logic();
+		// проверим, нужно ли обновить экран
+		if (needRedraw != 0) drawScreen();
+		// сбросить флаг прерывани€
+		NMI_flag = 0;
+	}
 }

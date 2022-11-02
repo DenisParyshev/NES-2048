@@ -46,11 +46,11 @@
 	.export		_YouWin
 	.export		_putRandom
 	.export		_initGame
-	.export		_main
 	.export		_shiftOne
 	.export		_fillField
 	.export		_fillChar
 	.export		_mapField
+	.export		_main
 
 .segment	"DATA"
 
@@ -1158,7 +1158,7 @@ _field:
 .segment	"CODE"
 
 ;
-; PPU_CTRL = 0x90; // screen is on, NMI on
+; PPU_CTRL = 0x90;
 ;
 	lda     #$90
 	sta     $2000
@@ -1199,15 +1199,21 @@ _field:
 	lda     #$00
 	sta     $2006
 ;
-; for (index = 0; index < sizeof(PALETTE); ++index) PPU_DATA = PALETTE[index];
+; for (index = 0; index < sizeof(PALETTE); ++index) 
 ;
 	sta     _index
 L0007:	lda     _index
 	cmp     #$10
 	bcs     L0003
+;
+; PPU_DATA = PALETTE[index];
+;
 	ldy     _index
 	lda     _PALETTE,y
 	sta     $2007
+;
+; for (index = 0; index < sizeof(PALETTE); ++index) 
+;
 	inc     _index
 	jmp     L0007
 ;
@@ -1236,25 +1242,26 @@ L0003:	jmp     _All_On
 ;
 	lda     _state
 	cmp     #$01
-	jne     L004C
+	jne     L004E
 	lda     _stopGame
-	jne     L004C
+	jne     L004E
 ;
-; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) { 
+; index = 0;
+;
+	sta     _index
+;
+; if (((joypad1 & RIGHT) != 0) && ((joypad1old & RIGHT) == 0)) for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index); // нажали вправо
 ;
 	lda     _joypad1
 	and     #$01
-	beq     L003D
+	beq     L003E
 	lda     _joypad1old
 	and     #$01
-	bne     L003D
-;
-; for (index = 0; index < 4; ++index) fillField(0, 1, 2, 3, index, index, index, index);
-;
+	bne     L003E
 	sta     _index
-L003C:	lda     _index
+L003D:	lda     _index
 	cmp     #$04
-	bcs     L000D
+	bcs     L003E
 	jsr     decsp7
 	lda     #$00
 	ldy     #$06
@@ -1280,27 +1287,20 @@ L003C:	lda     _index
 	lda     _index
 	jsr     _fillField
 	inc     _index
-	jmp     L003C
+	jmp     L003D
 ;
-; putRandom();
+; if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))  for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index); // нажали влево
 ;
-L000D:	jsr     _putRandom
-;
-; if (((joypad1 & LEFT) != 0) && ((joypad1old & LEFT) == 0)) { 
-;
-L003D:	lda     _joypad1
+L003E:	lda     _joypad1
 	and     #$02
-	beq     L0042
+	beq     L0043
 	lda     _joypad1old
 	and     #$02
-	bne     L0042
-;
-; for (index = 0; index < 4; ++index) fillField(3, 2, 1, 0, index, index, index, index);
-;
+	bne     L0043
 	sta     _index
-L0041:	lda     _index
+L0042:	lda     _index
 	cmp     #$04
-	bcs     L0017
+	bcs     L0043
 	jsr     decsp7
 	lda     #$03
 	ldy     #$06
@@ -1326,27 +1326,20 @@ L0041:	lda     _index
 	lda     _index
 	jsr     _fillField
 	inc     _index
-	jmp     L0041
+	jmp     L0042
 ;
-; putRandom();
+; if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))  for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3); // нажали вниз
 ;
-L0017:	jsr     _putRandom
-;
-; if (((joypad1 & DOWN) != 0) && ((joypad1old & DOWN) == 0)) { 
-;
-L0042:	lda     _joypad1
+L0043:	lda     _joypad1
 	and     #$04
-	beq     L0047
+	beq     L0048
 	lda     _joypad1old
 	and     #$04
-	bne     L0047
-;
-; for (index = 0; index < 4; ++index) fillField(index, index, index, index, 0, 1, 2, 3);
-;
+	bne     L0048
 	sta     _index
-L0046:	lda     _index
+L0047:	lda     _index
 	cmp     #$04
-	bcs     L0021
+	bcs     L0048
 	jsr     decsp7
 	lda     _index
 	ldy     #$06
@@ -1372,27 +1365,20 @@ L0046:	lda     _index
 	lda     #$03
 	jsr     _fillField
 	inc     _index
-	jmp     L0046
+	jmp     L0047
 ;
-; putRandom();
+; if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))  for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0); // нажали вверх
 ;
-L0021:	jsr     _putRandom
-;
-; if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) { 
-;
-L0047:	lda     _joypad1
+L0048:	lda     _joypad1
 	and     #$08
-	beq     L004C
+	beq     L004D
 	lda     _joypad1old
 	and     #$08
-	bne     L004C
-;
-; for (index = 0; index < 4; ++index) fillField(index, index, index, index, 3, 2, 1, 0);
-;
+	bne     L004D
 	sta     _index
-L004B:	lda     _index
+L004C:	lda     _index
 	cmp     #$04
-	bcs     L002B
+	bcs     L004D
 	jsr     decsp7
 	lda     _index
 	ldy     #$06
@@ -1418,35 +1404,37 @@ L004B:	lda     _index
 	tya
 	jsr     _fillField
 	inc     _index
-	jmp     L004B
+	jmp     L004C
 ;
-; putRandom();
+; if (index > 0) putRandom();
 ;
-L002B:	jsr     _putRandom
-;
-; if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
-;
-L004C:	lda     _joypad1
-	and     #$10
+L004D:	lda     _index
 	beq     L004E
+	jsr     _putRandom
+;
+; if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) 
+;
+L004E:	lda     _joypad1
+	and     #$10
+	beq     L0050
 	lda     _joypad1old
 	and     #$10
-	beq     L004F
-L004E:	rts
+	beq     L0051
+L0050:	rts
 ;
 ; if ((state != 1) || (stopGame == 1)) {
 ;
-L004F:	lda     _state
+L0051:	lda     _state
 	cmp     #$01
-	bne     L0051
+	bne     L0053
 	lda     _stopGame
 	cmp     #$01
-	beq     L0051
+	beq     L0053
 	rts
 ;
 ; initGame();
 ;
-L0051:	jsr     _initGame
+L0053:	jsr     _initGame
 ;
 ; state = 1;
 ;
@@ -1498,30 +1486,25 @@ L0051:	jsr     _initGame
 	tax
 	lda     _state
 	cmp     #$01
-	bne     L0013
+	bne     L0012
 ;
-; index = 0;
+; for (y = 0; y <= 3; y++) 
 ;
-	txa
-	sta     _index
-;
-; for (y = 0; y <= 3; y++) {
-;
-	sta     _y
-L0010:	lda     _y
+	stx     _y
+L000F:	lda     _y
 	cmp     #$04
-	bcs     L0013
+	bcs     L0012
 ;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
 	lda     #$00
 	sta     _x
 	tax
-L0011:	lda     _x
+L0010:	lda     _x
 	cmp     #$04
-	bcs     L0012
+	bcs     L0011
 ;
-; mapField(field[x][y], map[index]);
+; mapField(field[x][y], map[y * 4 + x]);
 ;
 	jsr     aslax2
 	clc
@@ -1534,14 +1517,19 @@ L0011:	lda     _x
 	lda     (ptr1),y
 	jsr     pusha
 	ldx     #$00
-	lda     _index
-	asl     a
-	bcc     L000E
-	inx
+	lda     _y
+	jsr     shlax2
 	clc
-L000E:	adc     #<(_map)
+	adc     _x
+	bcc     L000C
+	inx
+L000C:	stx     tmp1
+	asl     a
+	rol     tmp1
+	clc
+	adc     #<(_map)
 	sta     ptr1
-	txa
+	lda     tmp1
 	adc     #>(_map)
 	sta     ptr1+1
 	ldy     #$01
@@ -1551,29 +1539,25 @@ L000E:	adc     #<(_map)
 	lda     (ptr1),y
 	jsr     _mapField
 ;
-; index++;
-;
-	inc     _index
-;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
 	ldx     #$00
 	inc     _x
-	jmp     L0011
-;
-; for (y = 0; y <= 3; y++) {
-;
-L0012:	inc     _y
 	jmp     L0010
+;
+; for (y = 0; y <= 3; y++) 
+;
+L0011:	inc     _y
+	jmp     L000F
 ;
 ; UnRLE(Screens[state]);
 ;
-L0013:	lda     _state
+L0012:	lda     _state
 	asl     a
-	bcc     L000F
+	bcc     L000E
 	ldx     #$01
 	clc
-L000F:	adc     #<(_Screens)
+L000E:	adc     #<(_Screens)
 	sta     ptr1
 	txa
 	adc     #>(_Screens)
@@ -1762,20 +1746,20 @@ L000F:	adc     #<(_Screens)
 	lda     #$00
 	sta     _index
 ;
-; for (y = 0; y <= 3; y++) {
+; for (y = 0; y <= 3; y++) 
 ;
 	sta     _y
-L001A:	lda     _y
+L0019:	lda     _y
 	cmp     #$04
-	bcs     L001E
+	bcs     L001D
 ;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
 	lda     #$00
 	sta     _x
-L001B:	lda     _x
+L001A:	lda     _x
 	cmp     #$04
-	bcs     L001D
+	bcs     L001C
 ;
 ; if (field[x][y] > 0) index++;
 ;
@@ -1790,24 +1774,24 @@ L001B:	lda     _x
 	sta     ptr1+1
 	ldy     _y
 	lda     (ptr1),y
-	beq     L001C
+	beq     L001B
 	inc     _index
 ;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
-L001C:	inc     _x
-	jmp     L001B
-;
-; for (y = 0; y <= 3; y++) {
-;
-L001D:	inc     _y
+L001B:	inc     _x
 	jmp     L001A
+;
+; for (y = 0; y <= 3; y++) 
+;
+L001C:	inc     _y
+	jmp     L0019
 ;
 ; if (index == 16) {
 ;
-L001E:	lda     _index
+L001D:	lda     _index
 	cmp     #$10
-	bne     L000D
+	bne     L000B
 ;
 ; GameOver(); 
 ;
@@ -1815,11 +1799,11 @@ L001E:	lda     _index
 ;
 ; } else {
 ;
-	jmp     L001F
+	jmp     L001E
 ;
 ; x = rand() % 4;
 ;
-L000D:	jsr     _rand
+L000B:	jsr     _rand
 	jsr     pushax
 	ldx     #$00
 	lda     #$04
@@ -1835,7 +1819,7 @@ L000D:	jsr     _rand
 	jsr     tosmoda0
 	sta     _y
 ;
-; while (field[x][y] > 0) {
+; } while (field[x][y] > 0);
 ;
 	ldx     #$00
 	lda     _x
@@ -1848,13 +1832,13 @@ L000D:	jsr     _rand
 	sta     ptr1+1
 	ldy     _y
 	lda     (ptr1),y
-	bne     L000D
+	bne     L000B
 ;
-; if (state == 1) {
+; if (state == 1) 
 ;
 	lda     _state
 	cmp     #$01
-	bne     L001F
+	bne     L001E
 ;
 ; if (rand() % 4 == 0) {
 ;
@@ -1866,7 +1850,7 @@ L000D:	jsr     _rand
 	cpx     #$00
 	bne     L0011
 	cmp     #$00
-	bne     L0021
+	bne     L001F
 ;
 ; field[x][y] = 2;
 ;
@@ -1883,12 +1867,12 @@ L000D:	jsr     _rand
 ;
 ; } else {
 ;
-	jmp     L0019
+	jmp     L0018
 ;
 ; field[x][y] = 1;
 ;
 L0011:	ldx     #$00
-L0021:	lda     _x
+L001F:	lda     _x
 	jsr     aslax2
 	clc
 	adc     #<(_field)
@@ -1898,11 +1882,11 @@ L0021:	lda     _x
 	sta     ptr1+1
 	ldy     _y
 	lda     #$01
-L0019:	sta     (ptr1),y
+L0018:	sta     (ptr1),y
 ;
 ; needRedraw = 1;
 ;
-L001F:	lda     #$01
+L001E:	lda     #$01
 	sta     _needRedraw
 ;
 ; }
@@ -1934,7 +1918,7 @@ L001F:	lda     #$01
 	lda     _Frame_Count
 	jsr     _srand
 ;
-; for (y = 0; y <= 3; y++) {
+; for (y = 0; y <= 3; y++)
 ;
 	lda     #$00
 	sta     _y
@@ -1942,7 +1926,7 @@ L0010:	lda     _y
 	cmp     #$04
 	bcs     L0003
 ;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
 	lda     #$00
 	sta     _x
@@ -1965,17 +1949,17 @@ L0011:	lda     _x
 	lda     #$00
 	sta     (ptr1),y
 ;
-; for (x = 0; x <= 3; x++) {
+; for (x = 0; x <= 3; x++) 
 ;
 	inc     _x
 	jmp     L0011
 ;
-; for (y = 0; y <= 3; y++) {
+; for (y = 0; y <= 3; y++)
 ;
 L0012:	inc     _y
 	jmp     L0010
 ;
-; for (t = 383; t <= 392; t++) n2[t] = 0x00;
+; for (t = 383; t <= 392; t++) 
 ;
 L0003:	ldy     #$00
 	lda     #$7F
@@ -1994,6 +1978,9 @@ L000A:	ldy     #$01
 	bvc     L000E
 	eor     #$80
 L000E:	bpl     L0013
+;
+; n2[t] = 0x00;
+;
 	iny
 	lda     (sp),y
 	tax
@@ -2007,6 +1994,9 @@ L000E:	bpl     L0013
 	sta     ptr1+1
 	tya
 	sta     (ptr1),y
+;
+; for (t = 383; t <= 392; t++) 
+;
 	tax
 	lda     #$01
 	jsr     addeq0sp
@@ -2033,61 +2023,6 @@ L0013:	lda     #$01
 ; }
 ;
 	jmp     incsp2
-
-.endproc
-
-; ---------------------------------------------------------------
-; void __near__ main (void)
-; ---------------------------------------------------------------
-
-.segment	"CODE"
-
-.proc	_main: near
-
-.segment	"CODE"
-
-;
-; initGame();
-;
-	jsr     _initGame
-;
-; Load_Palette();
-;
-	jsr     _Load_Palette
-;
-; state = 0; // начало игры
-;
-	lda     #$00
-	sta     _state
-;
-; needRedraw = 1;
-;
-	lda     #$01
-	sta     _needRedraw
-;
-; while (NMI_flag == 0); 
-;
-L0009:	lda     _NMI_flag
-	beq     L0009
-;
-; move_logic();
-;
-	jsr     _move_logic
-;
-; if (needRedraw != 0) drawScreen();
-;
-	lda     _needRedraw
-	beq     L000B
-	jsr     _drawScreen
-;
-; NMI_flag = 0;
-;
-	lda     #$00
-L000B:	sta     _NMI_flag
-;
-; while (1){  
-;
-	jmp     L0009
 
 .endproc
 
@@ -2422,7 +2357,7 @@ L0014:	sta     ptr1
 ;
 	jsr     pusha
 ;
-; n2[adr + 0] = x0;
+; n2[adr]     = x0;
 ;
 	ldy     #$05
 	lda     (sp),y
@@ -2861,6 +2796,61 @@ L0020:	lda     (sp),y
 ; }
 ;
 L000C:	jmp     incsp3
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ main (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_main: near
+
+.segment	"CODE"
+
+;
+; initGame();
+;
+	jsr     _initGame
+;
+; Load_Palette();
+;
+	jsr     _Load_Palette
+;
+; state = 0;
+;
+	lda     #$00
+	sta     _state
+;
+; needRedraw = 1;
+;
+	lda     #$01
+	sta     _needRedraw
+;
+; while (NMI_flag == 0);
+;
+L0009:	lda     _NMI_flag
+	beq     L0009
+;
+; move_logic();
+;
+	jsr     _move_logic
+;
+; if (needRedraw != 0) drawScreen();
+;
+	lda     _needRedraw
+	beq     L000B
+	jsr     _drawScreen
+;
+; NMI_flag = 0;
+;
+	lda     #$00
+L000B:	sta     _NMI_flag
+;
+; while (1) {
+;
+	jmp     L0009
 
 .endproc
 
