@@ -5,3 +5,4 @@
 Графика: NES Screen Tools<br>
 Компилятор: cc65<br>
 Эмулятор: FCEUX<br>
+Сборка бинарников для картриджа: NES ROM Maker (спасибо vfiuchcikicshuusrch)<br>
