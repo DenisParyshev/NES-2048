@@ -26,9 +26,12 @@
 	.export		_x
 	.export		_y
 	.export		_stopGame
+	.export		_win
+	.export		_countrer
 	.export		_field
 	.export		_map
-	.export		_PALETTE
+	.export		_MainPalette
+	.export		_WinPalette
 	.export		_All_Off
 	.export		_All_On
 	.export		_Load_Palette
@@ -41,6 +44,7 @@
 	.import		_srand
 	.export		_n1
 	.export		_n2
+	.export		_n3
 	.export		_Screens
 	.export		_beep
 	.export		_GameOver
@@ -56,6 +60,10 @@
 .segment	"DATA"
 
 _stopGame:
+	.byte	$00
+_win:
+	.byte	$00
+_countrer:
 	.byte	$00
 _map:
 	.word	$0035
@@ -517,7 +525,7 @@ _n2:
 
 .segment	"RODATA"
 
-_PALETTE:
+_MainPalette:
 	.byte	$0F
 	.byte	$00
 	.byte	$10
@@ -534,6 +542,23 @@ _PALETTE:
 	.byte	$09
 	.byte	$19
 	.byte	$38
+_WinPalette:
+	.byte	$0F
+	.byte	$14
+	.byte	$2A
+	.byte	$30
+	.byte	$0F
+	.byte	$11
+	.byte	$16
+	.byte	$28
+	.byte	$0F
+	.byte	$11
+	.byte	$16
+	.byte	$20
+	.byte	$0F
+	.byte	$14
+	.byte	$19
+	.byte	$29
 _n1:
 	.byte	$01
 	.byte	$10
@@ -1084,9 +1109,235 @@ _n1:
 	.byte	$00
 	.byte	$01
 	.byte	$00
+_n3:
+	.byte	$01
+	.byte	$00
+	.byte	$01
+	.byte	$4C
+	.byte	$41
+	.byte	$42
+	.byte	$43
+	.byte	$44
+	.byte	$45
+	.byte	$46
+	.byte	$00
+	.byte	$01
+	.byte	$3B
+	.byte	$47
+	.byte	$48
+	.byte	$00
+	.byte	$01
+	.byte	$1D
+	.byte	$49
+	.byte	$4A
+	.byte	$00
+	.byte	$01
+	.byte	$1B
+	.byte	$4B
+	.byte	$4C
+	.byte	$4D
+	.byte	$4E
+	.byte	$4F
+	.byte	$50
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$51
+	.byte	$54
+	.byte	$00
+	.byte	$00
+	.byte	$51
+	.byte	$54
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$52
+	.byte	$53
+	.byte	$00
+	.byte	$00
+	.byte	$52
+	.byte	$53
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$4B
+	.byte	$4C
+	.byte	$55
+	.byte	$56
+	.byte	$4F
+	.byte	$50
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$51
+	.byte	$54
+	.byte	$57
+	.byte	$59
+	.byte	$51
+	.byte	$54
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$52
+	.byte	$53
+	.byte	$58
+	.byte	$5A
+	.byte	$52
+	.byte	$53
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$5B
+	.byte	$5D
+	.byte	$5C
+	.byte	$5A
+	.byte	$67
+	.byte	$68
+	.byte	$00
+	.byte	$01
+	.byte	$1A
+	.byte	$5E
+	.byte	$5F
+	.byte	$64
+	.byte	$66
+	.byte	$69
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$60
+	.byte	$00
+	.byte	$63
+	.byte	$65
+	.byte	$6B
+	.byte	$6A
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$61
+	.byte	$62
+	.byte	$6E
+	.byte	$6D
+	.byte	$6C
+	.byte	$00
+	.byte	$01
+	.byte	$1A
+	.byte	$76
+	.byte	$71
+	.byte	$6F
+	.byte	$70
+	.byte	$7A
+	.byte	$7B
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$77
+	.byte	$78
+	.byte	$72
+	.byte	$73
+	.byte	$7C
+	.byte	$7D
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$79
+	.byte	$00
+	.byte	$74
+	.byte	$75
+	.byte	$00
+	.byte	$01
+	.byte	$1B
+	.byte	$7E
+	.byte	$7F
+	.byte	$80
+	.byte	$81
+	.byte	$82
+	.byte	$83
+	.byte	$00
+	.byte	$01
+	.byte	$1A
+	.byte	$86
+	.byte	$84
+	.byte	$85
+	.byte	$00
+	.byte	$01
+	.byte	$1B
+	.byte	$88
+	.byte	$87
+	.byte	$00
+	.byte	$8A
+	.byte	$8B
+	.byte	$8C
+	.byte	$00
+	.byte	$01
+	.byte	$19
+	.byte	$89
+	.byte	$8E
+	.byte	$8F
+	.byte	$90
+	.byte	$91
+	.byte	$8D
+	.byte	$00
+	.byte	$01
+	.byte	$1A
+	.byte	$92
+	.byte	$00
+	.byte	$00
+	.byte	$93
+	.byte	$00
+	.byte	$01
+	.byte	$1A
+	.byte	$94
+	.byte	$95
+	.byte	$96
+	.byte	$97
+	.byte	$98
+	.byte	$99
+	.byte	$00
+	.byte	$01
+	.byte	$59
+	.byte	$33
+	.byte	$23
+	.byte	$1D
+	.byte	$9A
+	.byte	$1F
+	.byte	$9B
+	.byte	$9C
+	.byte	$00
+	.byte	$01
+	.byte	$4C
+	.byte	$80
+	.byte	$22
+	.byte	$00
+	.byte	$01
+	.byte	$17
+	.byte	$AA
+	.byte	$AA
+	.byte	$00
+	.byte	$01
+	.byte	$05
+	.byte	$5A
+	.byte	$5A
+	.byte	$00
+	.byte	$01
+	.byte	$05
+	.byte	$FF
+	.byte	$FF
+	.byte	$00
+	.byte	$01
+	.byte	$05
+	.byte	$AA
+	.byte	$AA
+	.byte	$20
+	.byte	$00
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$01
+	.byte	$00
 _Screens:
 	.addr	_n1
 	.addr	_n2
+	.addr	_n3
 
 .segment	"BSS"
 
@@ -1176,7 +1427,7 @@ _field:
 .endproc
 
 ; ---------------------------------------------------------------
-; void __near__ Load_Palette (void)
+; void __near__ Load_Palette (unsigned char palette_index)
 ; ---------------------------------------------------------------
 
 .segment	"CODE"
@@ -1185,6 +1436,10 @@ _field:
 
 .segment	"CODE"
 
+;
+; void Load_Palette(unsigned char palette_index) {
+;
+	jsr     pusha
 ;
 ; All_Off();
 ;
@@ -1200,27 +1455,46 @@ _field:
 	lda     #$00
 	sta     $2006
 ;
-; for (index = 0; index < sizeof(PALETTE); ++index) 
+; for (index = 0; index < 16; ++index)
 ;
 	sta     _index
-L0007:	lda     _index
+L000B:	lda     _index
 	cmp     #$10
 	bcs     L0003
 ;
-; PPU_DATA = PALETTE[index];
+; if (palette_index == 0) {
+;
+	ldy     #$00
+	lda     (sp),y
+	bne     L0006
+;
+; PPU_DATA = MainPalette[index];
 ;
 	ldy     _index
-	lda     _PALETTE,y
-	sta     $2007
+	lda     _MainPalette,y
 ;
-; for (index = 0; index < sizeof(PALETTE); ++index) 
+; else {
+;
+	jmp     L000A
+;
+; PPU_DATA = WinPalette[index];
+;
+L0006:	ldy     _index
+	lda     _WinPalette,y
+L000A:	sta     $2007
+;
+; for (index = 0; index < 16; ++index)
 ;
 	inc     _index
-	jmp     L0007
+	jmp     L000B
 ;
 ; All_On();
 ;
-L0003:	jmp     _All_On
+L0003:	jsr     _All_On
+;
+; }
+;
+	jmp     incsp1
 
 .endproc
 
@@ -1243,9 +1517,9 @@ L0003:	jmp     _All_On
 ;
 	lda     _state
 	cmp     #$01
-	jne     L004E
+	jne     L0060
 	lda     _stopGame
-	jne     L004E
+	jne     L0060
 ;
 ; index = 0;
 ;
@@ -1255,14 +1529,14 @@ L0003:	jmp     _All_On
 ;
 	lda     _joypad1
 	and     #$01
-	beq     L003E
+	beq     L0050
 	lda     _joypad1old
 	and     #$01
-	bne     L003E
+	bne     L0050
 	sta     _index
-L003D:	lda     _index
+L004F:	lda     _index
 	cmp     #$04
-	bcs     L003E
+	bcs     L0050
 	jsr     decsp7
 	lda     #$00
 	ldy     #$06
@@ -1292,20 +1566,20 @@ L003D:	lda     _index
 	lda     #$00
 	jsr     _beep
 	inc     _index
-	jmp     L003D
+	jmp     L004F
 ;
 ; if (((joypad1 & LEFT) != 0)  && ((joypad1old & LEFT) == 0))  for (index = 0; index < 4; ++index) { fillField(3, 2, 1, 0, index, index, index, index); beep(3, 0);} // нажали влево
 ;
-L003E:	lda     _joypad1
+L0050:	lda     _joypad1
 	and     #$02
-	beq     L0043
+	beq     L0055
 	lda     _joypad1old
 	and     #$02
-	bne     L0043
+	bne     L0055
 	sta     _index
-L0042:	lda     _index
+L0054:	lda     _index
 	cmp     #$04
-	bcs     L0043
+	bcs     L0055
 	jsr     decsp7
 	lda     #$03
 	ldy     #$06
@@ -1335,20 +1609,20 @@ L0042:	lda     _index
 	lda     #$00
 	jsr     _beep
 	inc     _index
-	jmp     L0042
+	jmp     L0054
 ;
 ; if (((joypad1 & DOWN) != 0)  && ((joypad1old & DOWN) == 0))  for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 0, 1, 2, 3); beep(2, 0);} // нажали вниз
 ;
-L0043:	lda     _joypad1
+L0055:	lda     _joypad1
 	and     #$04
-	beq     L0048
+	beq     L005A
 	lda     _joypad1old
 	and     #$04
-	bne     L0048
+	bne     L005A
 	sta     _index
-L0047:	lda     _index
+L0059:	lda     _index
 	cmp     #$04
-	bcs     L0048
+	bcs     L005A
 	jsr     decsp7
 	lda     _index
 	ldy     #$06
@@ -1378,20 +1652,20 @@ L0047:	lda     _index
 	lda     #$00
 	jsr     _beep
 	inc     _index
-	jmp     L0047
+	jmp     L0059
 ;
 ; if (((joypad1 & UP) != 0)    && ((joypad1old & UP) == 0))  for (index = 0; index < 4; ++index) { fillField(index, index, index, index, 3, 2, 1, 0); beep(4, 0);} // нажали вверх
 ;
-L0048:	lda     _joypad1
+L005A:	lda     _joypad1
 	and     #$08
-	beq     L004D
+	beq     L005F
 	lda     _joypad1old
 	and     #$08
-	bne     L004D
+	bne     L005F
 	sta     _index
-L004C:	lda     _index
+L005E:	lda     _index
 	cmp     #$04
-	bcs     L004D
+	bcs     L005F
 	jsr     decsp7
 	lda     _index
 	ldy     #$06
@@ -1421,45 +1695,71 @@ L004C:	lda     _index
 	lda     #$00
 	jsr     _beep
 	inc     _index
-	jmp     L004C
+	jmp     L005E
 ;
 ; if (index > 0) putRandom();
 ;
-L004D:	lda     _index
-	beq     L004E
+L005F:	lda     _index
+	beq     L0060
 	jsr     _putRandom
 ;
-; if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) 
+; if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
 ;
-L004E:	lda     _joypad1
+L0060:	lda     _joypad1
 	and     #$10
-	beq     L0050
+	beq     L0073
 	lda     _joypad1old
 	and     #$10
-	beq     L0051
-L0050:	rts
+	bne     L0073
 ;
-; if ((state != 1) || (stopGame == 1)) {
+; if ((((state == 2) || (stopGame == 1)) && (win == 0)) || ((win == 0) && (state == 3))) {
 ;
-L0051:	lda     _state
-	cmp     #$01
-	bne     L0053
+	lda     _state
+	cmp     #$02
+	beq     L0066
 	lda     _stopGame
 	cmp     #$01
-	beq     L0053
-	rts
+	bne     L006A
+L0066:	lda     _win
+	beq     L0070
+L006A:	lda     _win
+	bne     L0071
+	lda     _state
+	cmp     #$03
+	bne     L0071
 ;
 ; initGame();
 ;
-L0053:	jsr     _initGame
+L0070:	jsr     _initGame
 ;
 ; state = 1;
 ;
 	lda     #$01
 	sta     _state
 ;
+; if (win == 1) {
+;
+L0071:	lda     _win
+	cmp     #$01
+	bne     L0072
+;
+; Load_Palette(1);
+;
+	jsr     _Load_Palette
+;
+; win = 0;
+;
+	lda     #$00
+	sta     _win
+;
+; state = 2;
+;
+	lda     #$02
+	sta     _state
+;
 ; needRedraw = 1;
 ;
+L0072:	lda     #$01
 	sta     _needRedraw
 ;
 ; stopGame = 0;
@@ -1471,7 +1771,27 @@ L0053:	jsr     _initGame
 ;
 	jsr     pusha
 	lda     #$03
-	jmp     _beep
+	jsr     _beep
+;
+; if (state == 0) {
+;
+L0073:	lda     _state
+	bne     L0042
+;
+; if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) countrer++;
+;
+	lda     _joypad1
+	and     #$08
+	beq     L0075
+	lda     _joypad1old
+	and     #$08
+	beq     L0076
+L0075:	rts
+L0076:	inc     _countrer
+;
+; }
+;
+L0042:	rts
 
 .endproc
 
@@ -1796,7 +2116,16 @@ L000E:	adc     #<(_Screens)
 	lda     #$00
 	jsr     pusha
 	lda     #$03
-	jmp     _beep
+	jsr     _beep
+;
+; win = 1;
+;
+	lda     #$01
+	sta     _win
+;
+; }
+;
+	rts
 
 .endproc
 
@@ -1976,9 +2305,14 @@ L001E:	lda     #$01
 .segment	"CODE"
 
 ;
-; stopGame = 1;
+; win = 0;
 ;
 	jsr     decsp2
+	lda     #$00
+	sta     _win
+;
+; stopGame = 1;
+;
 	lda     #$01
 	sta     _stopGame
 ;
@@ -1992,7 +2326,7 @@ L001E:	lda     #$01
 ;
 	lda     #$00
 	sta     _y
-L0010:	lda     _y
+L0011:	lda     _y
 	cmp     #$04
 	bcs     L0003
 ;
@@ -2000,9 +2334,9 @@ L0010:	lda     _y
 ;
 	lda     #$00
 	sta     _x
-L0011:	lda     _x
+L0012:	lda     _x
 	cmp     #$04
-	bcs     L0012
+	bcs     L0013
 ;
 ; field[x][y] = 0x00;
 ;
@@ -2022,12 +2356,12 @@ L0011:	lda     _x
 ; for (x = 0; x <= 3; x++) 
 ;
 	inc     _x
-	jmp     L0011
+	jmp     L0012
 ;
 ; for (y = 0; y <= 3; y++)
 ;
-L0012:	inc     _y
-	jmp     L0010
+L0013:	inc     _y
+	jmp     L0011
 ;
 ; for (t = 383; t <= 392; t++) 
 ;
@@ -2047,7 +2381,7 @@ L000A:	ldy     #$01
 	sbc     #$01
 	bvc     L000E
 	eor     #$80
-L000E:	bpl     L0013
+L000E:	bpl     L0014
 ;
 ; n2[t] = 0x00;
 ;
@@ -2072,9 +2406,24 @@ L000E:	bpl     L0013
 	jsr     addeq0sp
 	jmp     L000A
 ;
+; if (countrer == 5) {
+;
+L0014:	lda     _countrer
+	cmp     #$05
+	bne     L0015
+;
+; field[0][0] = 10;
+;
+	lda     #$0A
+	sta     _field
+;
+; field[0][1] = 10;
+;
+	sta     _field+1
+;
 ; state = 1;
 ;
-L0013:	lda     #$01
+L0015:	lda     #$01
 	sta     _state
 ;
 ; putRandom();
@@ -2089,6 +2438,15 @@ L0013:	lda     #$01
 ;
 	lda     #$00
 	sta     _state
+;
+; Load_Palette(0);
+;
+	jsr     _Load_Palette
+;
+; countrer = 0;
+;
+	lda     #$00
+	sta     _countrer
 ;
 ; }
 ;
@@ -2883,10 +3241,6 @@ L000C:	jmp     incsp3
 ; initGame();
 ;
 	jsr     _initGame
-;
-; Load_Palette();
-;
-	jsr     _Load_Palette
 ;
 ; state = 0;
 ;

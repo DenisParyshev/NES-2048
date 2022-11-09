@@ -8,9 +8,10 @@
 // импортируем 4 экрана (упакованные в RLE), которые используются в игре
 #include "screens/1.h" // Начальный экран 
 #include "screens/2.h" // Игровая область
+#include "screens/3.h" // Финальный экран
 
 // массив указателей на экраны
-const unsigned char* const Screens[] = { n1, n2 };
+const unsigned char* const Screens[] = { n1, n2, n3 };
 
 // отклчение вывода на экран
 void All_Off(void) {
@@ -24,13 +25,18 @@ void All_On(void) {
 	PPU_MASK = 0x1e;
 }
 
-// загрузка основной палитры в PPU
-void Load_Palette(void) {
+// загрузка выбранной палитры в PPU
+void Load_Palette(unsigned char palette_index) {
 	All_Off();
 	PPU_ADDRESS = 0x3f;
 	PPU_ADDRESS = 0x00;
-	for (index = 0; index < sizeof(PALETTE); ++index) 
-		PPU_DATA = PALETTE[index];
+	for (index = 0; index < 16; ++index)
+		if (palette_index == 0) {
+			PPU_DATA = MainPalette[index];
+		}
+		else {
+			PPU_DATA = WinPalette[index];
+		}
 	All_On();
 }
 
@@ -72,6 +78,7 @@ void YouWin(void) {
 	n2[390] = 0x3e;
 	n2[391] = 0x3f;
 	beep(0, 3);
+	win = 1;
 }
 
 // заполним следующую свободную клетку
@@ -104,6 +111,7 @@ void putRandom(void) {
 void initGame(void) {
 	// инициализация рандомайзера и очистка игрового поля
 	int t;
+	win = 0;
 	stopGame = 1;
 	srand(Frame_Count);
 	for (y = 0; y <= 3; y++)
@@ -112,11 +120,18 @@ void initGame(void) {
 	// скроем строку GAME OVER!
 	for (t = 383; t <= 392; t++) 
 		n2[t] = 0x00;
+	// читы
+	if (countrer == 5) {
+		field[0][0] = 10;
+		field[0][1] = 10;
+	}
 	// покажем два первых числа
 	state = 1;
 	putRandom();
 	putRandom();
 	state = 0;
+	Load_Palette(0);
+	countrer = 0;
 }
 
 // сделать сдвиг одной линии во временной таблице
@@ -166,14 +181,26 @@ void move_logic(void) {
 		if (index > 0) putRandom();
 	}
 	// анализируем кнопку START
-	if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) 
-		if ((state != 1) || (stopGame == 1)) {
+	if (((joypad1 & START) != 0) && ((joypad1old & START) == 0)) {
+		// все возможные обработчики кнопки Start
+		if ((((state == 2) || (stopGame == 1)) && (win == 0)) || ((win == 0) && (state == 3))) {
 			initGame();
 			state = 1;
-			needRedraw = 1;
-			stopGame = 0;
-			beep(0, 3);
 		}
+		// когда нажали Start после окна поздравлений, выведем картинку
+		if (win == 1) {
+			Load_Palette(1);
+			win = 0;
+			state = 2;
+		}
+		needRedraw = 1;
+		stopGame = 0;
+		beep(0, 3);
+	}
+	// читы
+	if (state == 0) {
+		if (((joypad1 & UP) != 0) && ((joypad1old & UP) == 0)) countrer++;
+	}
 }
 
 // заполнить 4 позиции числа
@@ -225,7 +252,6 @@ void drawScreen(void) {
 void main(void) {
 	//инициализация
 	initGame();
-	Load_Palette();
 	state = 0;
 	needRedraw = 1;
 	// основной цикл

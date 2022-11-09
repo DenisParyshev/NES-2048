@@ -35,6 +35,8 @@ unsigned char fld[4];
 unsigned char x;
 unsigned char y;
 unsigned char stopGame = 0;
+unsigned char win = 0;
+unsigned char countrer = 0;
 
 // массив игровой области
 unsigned char field[4][4];
@@ -43,17 +45,26 @@ unsigned char field[4][4];
 int map[16] = { 53, 59, 65, 71, 141, 147, 153, 159, 229, 235, 241, 247, 317, 323, 329, 335 };
 
 // основная палитра
-const unsigned char PALETTE[] = { 
+const unsigned char MainPalette[16] = { 
 	0x0f, 0x00, 0x10, 0x30,
 	0x0f, 0x01, 0x11, 0x21,
 	0x0f, 0x06, 0x16, 0x26,
 	0x0f, 0x09, 0x19, 0x38 
 };
 
+// палитра финального экрана
+const unsigned char WinPalette[16] = { 
+	0x0f, 0x14, 0x2a, 0x30,
+	0x0f, 0x11, 0x16, 0x28,
+	0x0f, 0x11, 0x16, 0x20,
+	0x0f, 0x14, 0x19, 0x29 };
+
+
+
 // Прототипы процедур и функций
 void All_Off(void);
 void All_On(void);
-void Load_Palette(void);
+void Load_Palette(unsigned char palette_index);
 void move_logic (void);
 void drawScreen(void);
 void Wait_Vblank(void);
